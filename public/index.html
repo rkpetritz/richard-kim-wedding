@@ -938,7 +938,7 @@
         document.querySelectorAll('.mobile-nav-link').forEach(link => link.addEventListener('click', closeDrawer));
 
         // Countdown Timer - Dec 4, 2026 at 11:30 AM
-        const weddingDate = new Date('December 4, 2026 11:30:00').getTime();
+        const weddingDate = new Date('2026-12-04T11:30:00-08:00').getTime();
 
         function updateCountdown() {
             const now = new Date().getTime();
@@ -961,8 +961,11 @@
                 document.getElementById('seconds').innerText = "00";
             }
         }
-        setInterval(updateCountdown, 1000);
         updateCountdown();
+        setInterval(updateCountdown, 1000);
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden) updateCountdown();
+        });
 
         // Lightbox
         function openLightbox(url) {
@@ -1388,5 +1391,6 @@
         async function refreshGuestbook(){try{publicGuestbook=await api('guestbook');renderGuestbook()}catch(e){console.error(e)}}
         window.onload=async()=>{await Promise.all([refreshPayments(),refreshGuestbook()])};
 
+    </script>
 </body>
 </html>
