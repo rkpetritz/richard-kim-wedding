@@ -57,12 +57,40 @@
             background: #c5a059;
             border-radius: 4px;
         }
-        .hero-bg {
-            background: linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.45)), url('/hero-photo.jpeg');
-            background-size: cover;
-            background-position: center;
-            background-attachment: scroll; /* More reliable on iOS Safari */
-        }
+       /* Wedding hero background */
+.hero-bg {
+    background-image:
+        linear-gradient(
+            rgba(0, 0, 0, 0.35),
+            rgba(0, 0, 0, 0.45)
+        ),
+        url('/hero-photo.jpeg');
+
+    background-size: cover;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: scroll;
+}
+
+/* Desktop screens */
+@media (min-width: 1024px) {
+    .hero-bg {
+        background-size: cover;
+        background-position: center 35%;
+        min-height: 650px;
+        max-height: 850px;
+    }
+}
+
+/* Mobile screens */
+@media (max-width: 767px) {
+    .hero-bg {
+        background-size: cover;
+        background-position: center center;
+        min-height: 100svh;
+        max-height: none;
+    }
+}
         .glass-card {
             background: rgba(252, 251, 247, 0.85);
             backdrop-filter: blur(12px);
