@@ -58,10 +58,10 @@
             border-radius: 4px;
         }
         .hero-bg {
-            background: linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.45)), url('https://6ada4cf9dec1f720a848ebc9.imgix.net/sandbox/me&kim.jpeg');
+            background: linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.45)), url('/hero-photo.jpg');
             background-size: cover;
             background-position: center;
-            background-attachment: fixed;
+            background-attachment: scroll; /* More reliable on iOS Safari */
         }
         .glass-card {
             background: rgba(252, 251, 247, 0.85);
@@ -1392,7 +1392,8 @@
         window.onload=async()=>{await Promise.all([refreshPayments(),refreshGuestbook()])};
 
     </script>
-	<!-- Wedding background music: no visible toggle button -->
+
+    <!-- Wedding background music: no visible toggle button -->
     <audio id="wedding-background-music" autoplay loop preload="auto" playsinline>
         <source src="/wedding-music.mp3" type="audio/mpeg">
     </audio>
