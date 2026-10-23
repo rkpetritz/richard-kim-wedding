@@ -1,0 +1,1392 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Richard & Kim - Our Wedding</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        sage: {
+                            50: '#f4f7f4',
+                            100: '#e3ebd0',
+                            200: '#c5d7c5',
+                            600: '#688568',
+                            700: '#526e52',
+                            800: '#3f563f',
+                            900: '#1b2a1b',
+                        },
+                        champagne: {
+                            100: '#fdfbf7',
+                            200: '#f7f0e6',
+                            300: '#ebd9c1',
+                            400: '#d8b98a',
+                            500: '#c5a059',
+                            600: '#aa823c',
+                        },
+                        ivory: '#fcfbf7',
+                    },
+                    fontFamily: {
+                        serif: ['Cormorant Garamond', 'Georgia', 'serif'],
+                        sans: ['Montserrat', 'sans-serif'],
+                        script: ['Alex Brush', 'cursive'],
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #fcfbf7;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #c5a059;
+            border-radius: 4px;
+        }
+        .hero-bg {
+            background: linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.45)), url('https://6ada4cf9dec1f720a848ebc9.imgix.net/sandbox/me&kim.jpeg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+        }
+        .glass-card {
+            background: rgba(252, 251, 247, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(197, 160, 89, 0.2);
+        }
+        .glass-dark {
+            background: rgba(20, 25, 20, 0.65);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(216, 185, 138, 0.3);
+        }
+        .fade-in-section {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+            will-change: opacity, transform;
+        }
+        .fade-in-section.is-visible {
+            opacity: 1;
+            transform: none;
+        }
+    </style>
+</head>
+<body class="bg-ivory text-gray-800 font-sans antialiased selection:bg-champagne-300 selection:text-gray-900">
+
+    <!-- Navigation Bar -->
+    <nav id="navbar" class="fixed top-0 left-0 w-full z-50 transition-all duration-300 py-4 px-6 md:px-12 flex justify-between items-center bg-transparent text-white">
+        <a href="#" class="font-serif text-2xl tracking-widest font-semibold flex items-center space-x-2">
+            <span>R</span>
+            <span class="text-champagne-400 font-script text-3xl font-normal">&amp;</span>
+            <span>K</span>
+        </a>
+
+        <!-- Desktop Menu -->
+        <div class="hidden md:flex items-center space-x-6 text-xs tracking-widest uppercase font-medium">
+            <a href="#story" class="hover:text-champagne-300 transition-colors">Our Story</a>
+            <a href="#schedule" class="hover:text-champagne-300 transition-colors">Schedule</a>
+            <a href="#venue" class="hover:text-champagne-300 transition-colors">Venue</a>
+            <a href="#gallery" class="hover:text-champagne-300 transition-colors">Gallery</a>
+            <a href="#rsvp" class="hover:text-champagne-300 transition-colors">RSVP</a>
+            <a href="#registry" class="hover:text-champagne-300 transition-colors">Registry</a>
+            <a href="#guestbook" class="hover:text-champagne-300 transition-colors">Guestbook</a>
+            <a href="#faq" class="hover:text-champagne-300 transition-colors">FAQ</a>
+            <button onclick="openHostModal()" class="text-champagne-300 hover:text-white transition-colors flex items-center space-x-1 border border-champagne-400/50 px-3 py-1.5 rounded-full text-[10px] bg-black/20 hover:bg-champagne-500/20">
+                <i class="fa-solid fa-lock text-[9px]"></i>
+                <span>Host Portal</span>
+            </button>
+        </div>
+
+        <!-- Mobile Menu Toggle Button -->
+        <button id="mobile-menu-btn" class="md:hidden text-2xl focus:outline-none" aria-label="Toggle Navigation">
+            <i class="fa-solid fa-bars"></i>
+        </button>
+    </nav>
+
+    <!-- Mobile Navigation Drawer -->
+    <div id="mobile-menu" class="fixed inset-0 bg-sage-900/95 backdrop-blur-lg z-40 flex flex-col items-center justify-center space-y-6 text-white text-lg uppercase tracking-widest opacity-0 pointer-events-none transition-opacity duration-300">
+        <button id="close-menu-btn" class="absolute top-6 right-6 text-3xl text-champagne-300 focus:outline-none">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        <a href="#story" class="mobile-nav-link hover:text-champagne-300">Our Story</a>
+        <a href="#schedule" class="mobile-nav-link hover:text-champagne-300">Schedule</a>
+        <a href="#venue" class="mobile-nav-link hover:text-champagne-300">Venue &amp; Stay</a>
+        <a href="#gallery" class="mobile-nav-link hover:text-champagne-300">Gallery</a>
+        <a href="#rsvp" class="mobile-nav-link hover:text-champagne-300">RSVP</a>
+        <a href="#registry" class="mobile-nav-link hover:text-champagne-300">Registry</a>
+        <a href="#guestbook" class="mobile-nav-link hover:text-champagne-300">Guestbook</a>
+        <a href="#faq" class="mobile-nav-link hover:text-champagne-300">FAQ</a>
+        <button onclick="openHostModal(); closeDrawer();" class="text-champagne-300 hover:text-white border border-champagne-300 px-5 py-2 rounded-full text-xs uppercase tracking-widest mt-4 flex items-center space-x-2">
+            <i class="fa-solid fa-lock"></i>
+            <span>Host Portal</span>
+        </button>
+    </div>
+
+    <!-- Hero Section -->
+    <header class="hero-bg min-h-screen flex flex-col justify-between items-center text-center text-white relative px-4 pt-24 pb-12">
+        <div class="my-auto max-w-4xl px-4">
+            <p class="text-champagne-300 uppercase tracking-widest text-sm md:text-base mb-4 font-light">We are getting married</p>
+            <h1 class="font-serif text-5xl md:text-8xl lg:text-9xl tracking-tight mb-2 font-normal">
+                Richard <span class="font-script text-champagne-300 lowercase text-6xl md:text-9xl">&amp;</span> Kim
+            </h1>
+            <p class="text-lg md:text-2xl font-light tracking-wide text-gray-200 mt-4 mb-8">
+                December 4, 2026 • 11:30 AM • Vancouver City hall, British Columbia
+            </p>
+
+            <!-- Countdown Timer -->
+            <div class="glass-dark rounded-2xl p-6 md:p-8 max-w-2xl mx-auto shadow-2xl border border-champagne-400/30">
+                <div class="grid grid-cols-4 gap-2 md:gap-6 text-center">
+                    <div class="p-2">
+                        <span id="days" class="font-serif text-3xl md:text-5xl font-semibold text-champagne-300 block">00</span>
+                        <span class="text-[10px] md:text-xs uppercase tracking-widest text-gray-300">Days</span>
+                    </div>
+                    <div class="p-2 border-l border-champagne-400/20">
+                        <span id="hours" class="font-serif text-3xl md:text-5xl font-semibold text-champagne-300 block">00</span>
+                        <span class="text-[10px] md:text-xs uppercase tracking-widest text-gray-300">Hours</span>
+                    </div>
+                    <div class="p-2 border-l border-champagne-400/20">
+                        <span id="minutes" class="font-serif text-3xl md:text-5xl font-semibold text-champagne-300 block">00</span>
+                        <span class="text-[10px] md:text-xs uppercase tracking-widest text-gray-300">Mins</span>
+                    </div>
+                    <div class="p-2 border-l border-champagne-400/20">
+                        <span id="seconds" class="font-serif text-3xl md:text-5xl font-semibold text-champagne-300 block">00</span>
+                        <span class="text-[10px] md:text-xs uppercase tracking-widest text-gray-300">Secs</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-10">
+                <a href="#rsvp" class="inline-block bg-champagne-500 hover:bg-champagne-600 text-gray-900 font-medium px-8 py-3.5 rounded-full uppercase text-xs tracking-widest transition-all duration-300 shadow-lg hover:shadow-champagne-500/20 hover:-translate-y-0.5">
+                    RSVP Now
+                </a>
+            </div>
+        </div>
+
+        <a href="#story" class="animate-bounce text-champagne-300 text-xl opacity-80 hover:opacity-100 transition-opacity">
+            <i class="fa-solid fa-chevron-down"></i>
+        </a>
+    </header>
+
+    <!-- Welcome Section -->
+    <section class="py-20 px-6 max-w-4xl mx-auto text-center fade-in-section">
+        <div class="w-16 h-16 mx-auto mb-6 flex items-center justify-center rounded-full bg-champagne-100 text-champagne-600 text-2xl">
+            <i class="fa-solid fa-wine-glass-empty"></i>
+        </div>
+        <h2 class="font-serif text-3xl md:text-5xl text-gray-900 mb-6 font-normal">Join Us as We Say “I Do” 💍</h2>
+        <p class="text-gray-600 leading-relaxed font-light text-base md:text-lg max-w-2xl mx-auto">
+            We can’t wait to celebrate our special day surrounded by the people we love most. Join us as we begin our forever together at Vancouver City Hall in beautiful Vancouver, British Columbia, where love, laughter, and cherished memories will make this day truly unforgettable.
+        </p>
+    </section>
+
+    <!-- Story Section -->
+    <section id="story" class="py-20 px-6 bg-sage-50/50 border-y border-sage-100 fade-in-section">
+        <div class="max-w-5xl mx-auto">
+            <div class="text-center mb-16">
+                <span class="text-champagne-600 uppercase text-xs tracking-widest font-semibold">How It All Began</span>
+                <h2 class="font-serif text-4xl md:text-5xl text-gray-900 mt-2 font-normal">Our Love Story</h2>
+                <div class="w-12 h-0.5 bg-champagne-400 mx-auto mt-4"></div>
+            </div>
+
+            <div class="relative border-l border-champagne-300/60 md:border-none md:before:absolute md:before:inset-0 md:before:left-1/2 md:before:w-0.5 md:before:bg-champagne-300/60 space-y-12">
+                
+                <!-- Event 1 -->
+                <div class="relative md:flex items-center justify-between group">
+                    <div class="md:w-5/12 ml-8 md:ml-0 md:text-right order-1">
+                        <span class="inline-block px-3 py-1 bg-champagne-200 text-champagne-800 text-xs font-semibold rounded-full mb-2">September 2021</span>
+                        <h3 class="font-serif text-2xl text-gray-800 mb-2">First trip together @Banff Alberta</h3>
+                        <p class="text-gray-600 font-light text-sm leading-relaxed">
+                            Lost in Alberta’s breathtaking views, but found exactly where my heart belongs — with you. 🤍🏔️✨
+                        </p>
+                    </div>
+                    <div class="absolute -left-3 md:left-1/2 -translate-x-1/2 w-7 h-7 rounded-full bg-champagne-400 border-4 border-ivory flex items-center justify-center text-white text-xs shadow top-0 md:top-auto">
+                        <i class="fa-solid fa-heart text-[8px]"></i>
+                    </div>
+                    <div class="md:w-5/12 ml-8 md:ml-0 order-2 mt-4 md:mt-0">
+                        <img src="https://6ada4cf9dec1f720a848ebc9.imgix.net/sandbox/alberta.jpeg" alt="First Meeting" class="rounded-2xl shadow-md w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500">
+                    </div>
+                </div>
+
+                <!-- Event 2 -->
+                <div class="relative md:flex items-center justify-between group">
+                    <div class="md:w-5/12 ml-8 md:ml-0 order-2 md:order-1 mt-4 md:mt-0">
+                        <img src="https://6ada4cf9dec1f720a848ebc9.imgix.net/sandbox/davao.jpeg" alt="First Trip" class="rounded-2xl shadow-md w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500">
+                    </div>
+                    <div class="absolute -left-3 md:left-1/2 -translate-x-1/2 w-7 h-7 rounded-full bg-champagne-400 border-4 border-ivory flex items-center justify-center text-white text-xs shadow top-0 md:top-auto">
+                        <i class="fa-solid fa-plane text-[8px]"></i>
+                    </div>
+                    <div class="md:w-5/12 ml-8 md:ml-0 md:text-left order-1 md:order-2">
+                        <span class="inline-block px-3 py-1 bg-champagne-200 text-champagne-800 text-xs font-semibold rounded-full mb-2">August 2023</span>
+                        <h3 class="font-serif text-2xl text-gray-800 mb-2">A Journey to Your Roots, A Step Closer to Your Heart ❤️🇵🇭</h3>
+                        <p class="text-gray-600 font-light text-sm leading-relaxed">
+                            More than just a trip to Davao, Philippines 🇵🇭❤️ — it was a journey of love, family, and beautiful memories as I got to meet the people who mean so much to you. Grateful to be welcomed into your world and to share these special moments with you. 🥹💕✈️.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Event 3 -->
+                <div class="relative md:flex items-center justify-between group">
+                    <div class="md:w-5/12 ml-8 md:ml-0 md:text-right order-1">
+                        <span class="inline-block px-3 py-1 bg-champagne-200 text-champagne-800 text-xs font-semibold rounded-full mb-2">October 2026</span>
+                        <h3 class="font-serif text-2xl text-gray-800 mb-2">💍 The Day We Said YES to Forever! ❤️</h3>
+                        <p class="text-gray-600 font-light text-sm leading-relaxed">
+                            That day, I asked the love of my life to spend forever with me, and the answer was YES! 💍✨
+                        </p>
+                    </div>
+                    <div class="absolute -left-3 md:left-1/2 -translate-x-1/2 w-7 h-7 rounded-full bg-champagne-400 border-4 border-ivory flex items-center justify-center text-white text-xs shadow top-0 md:top-auto">
+                        <i class="fa-solid fa-ring text-[8px]"></i>
+                    </div>
+                    <div class="md:w-5/12 ml-8 md:ml-0 order-2 mt-4 md:mt-0">
+                        <img src="https://6ada4cf9dec1f720a848ebc9.imgix.net/sandbox/engaged.jpeg" alt="The Proposal" class="rounded-2xl shadow-md w-full h-48 object-cover group-hover:scale-105 transition-transform duration-500">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Schedule Section -->
+    <section id="schedule" class="py-20 px-6 max-w-6xl mx-auto fade-in-section">
+        <div class="text-center mb-16">
+            <span class="text-champagne-600 uppercase text-xs tracking-widest font-semibold">Order of Events</span>
+            <h2 class="font-serif text-4xl md:text-5xl text-gray-900 mt-2 font-normal">Wedding Day Schedule</h2>
+            <p class="text-gray-500 text-sm mt-2">Friday, December 4, 2026 • Semi-Formal / Elegant Attire</p>
+            <div class="w-12 h-0.5 bg-champagne-400 mx-auto mt-4"></div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Event 1 -->
+
+            <!-- Event 2 -->
+            <div class="bg-white p-8 rounded-2xl shadow-sm border border-champagne-100 text-center hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between">
+                <div>
+                    <div class="text-champagne-500 text-3xl mb-4"><i class="fa-solid fa-church"></i></div>
+                    <span class="text-xs uppercase tracking-widest font-semibold text-sage-600">11:30 AM</span>
+                    <h3 class="font-serif text-2xl text-gray-800 my-2">The Ceremony</h3>
+                    <p class="text-gray-500 font-light text-xs leading-relaxed">
+                        We exchange our wedding vows in Vancouver City Hall. Please arrive 30 mins before the ceremony.
+                    </p>
+                </div>
+                <div class="mt-6 pt-4 border-t border-gray-100 text-[11px] text-gray-400 font-medium">Vancouver City Hall</div>
+            </div>
+
+            <!-- Event 3 -->
+            <div class="bg-white p-8 rounded-2xl shadow-sm border border-champagne-100 text-center hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between">
+                <div>
+                    <div class="text-champagne-500 text-3xl mb-4"><i class="fa-solid fa-utensils"></i></div>
+                    <span class="text-xs uppercase tracking-widest font-semibold text-sage-600">1:00 PM</span>
+                    <h3 class="font-serif text-2xl text-gray-800 my-2">Wedding Luncheon</h3>
+                    <p class="text-gray-500 font-light text-xs leading-relaxed">
+                        As part of our wedding celebration, each guest is welcome to order food and beverages of their choice, with a maximum budget of $50 CAD per person.
+                    </p>
+                </div>
+                <div class="mt-6 pt-4 border-t border-gray-100 text-[11px] text-gray-400 font-medium">The Cactus Club Cafe</div>
+            </div>
+
+            <!-- Event 4 -->
+            <div class="bg-white p-8 rounded-2xl shadow-sm border border-champagne-100 text-center hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between">
+                <div>
+                    <div class="text-champagne-500 text-3xl mb-4"><i class="fa-solid fa-ring"></i></div>
+                    <span class="text-xs uppercase tracking-widest font-semibold text-sage-600">After Lunch</span>
+                    <h3 class="font-serif text-2xl text-gray-800 my-2">Wedding Souvenirs</h3>
+                    <p class="text-gray-500 font-light text-xs leading-relaxed">
+                        After lunch, we will be giving out special wedding souvenirs as a little token of our love and appreciation. Please don't forget to collect yours before leaving!
+                    </p>
+                </div>
+                <div class="mt-6 pt-4 border-t border-gray-100 text-[11px] text-gray-400 font-medium">The Cactus Club Cafe</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Venue & Stay -->
+    <section id="venue" class="py-20 px-6 bg-sage-50/60 border-y border-sage-100 fade-in-section">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-16">
+                <span class="text-champagne-600 uppercase text-xs tracking-widest font-semibold">Location &amp; Travel</span>
+                <h2 class="font-serif text-4xl md:text-5xl text-gray-900 mt-2 font-normal">Venue &amp; Accommodation</h2>
+                <div class="w-12 h-0.5 bg-champagne-400 mx-auto mt-4"></div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div class="space-y-6">
+                    <div class="bg-white p-8 rounded-3xl shadow-sm border border-champagne-100">
+                        <span class="text-champagne-600 font-semibold text-xs uppercase tracking-widest">The Wedding Ceremony Location</span>
+                        <h3 class="font-serif text-3xl text-gray-800 my-2">Vancouver City Hall</h3>
+                        <p class="text-gray-600 font-light text-sm mb-4 leading-relaxed">
+                            453 West 12th Avenue, Vancouver, BC V5Y 1V4
+                        </p>
+                        <p class="text-gray-500 font-light text-sm leading-relaxed mb-6">
+                            A beautiful and iconic civic landmark in the heart of downtown Vancouver, offering elegant architecture and a timeless setting for an intimate wedding ceremony.
+                        </p>
+                        <a href="https://www.google.com/maps/place/453+W+12th+Ave,+Vancouver,+BC+V5Y+1V4/@49.2608637,-123.1165322,17z/data=!3m1!4b1!4m6!3m5!1s0x548673e7b8d21d8d:0x46f25841adee0289!8m2!3d49.2608602!4d-123.1139573!16s%2Fg%2F1pty3mj1d?entry=ttu&g_ep=EgoyMDI2MTAxOS4wIKXMDSoASAFQAw%3D%3D" target="_blank" rel="noopener" class="inline-flex items-center space-x-2 text-xs uppercase tracking-widest text-champagne-600 hover:text-champagne-700 font-semibold">
+                            <span>Get Directions</span>
+                            <i class="fa-solid fa-arrow-right text-xs"></i>
+                        </a>
+                    </div>
+					<div class="bg-white p-8 rounded-3xl shadow-sm border border-champagne-100">
+                        <span class="text-champagne-600 font-semibold text-xs uppercase tracking-widest">Wedding Luncheon Location</span>
+                        <h3 class="font-serif text-3xl text-gray-800 my-2">The Cactus Club Cafe</h3>
+                        <p class="text-gray-600 font-light text-sm mb-4 leading-relaxed">
+                           Cactus Club Cafe, 575 W Broadway, Vancouver, BC V5Z 1E6
+                        </p>
+                        <p class="text-gray-500 font-light text-sm leading-relaxed mb-6">
+                            Following our intimate civil wedding ceremony, we warmly invite our beloved family and friends to join us for a special wedding luncheon at Cactus Club Cafe.
+                        </p>
+                        <a href="https://www.google.com/maps/place/Cactus+Club+Cafe/@49.2634083,-123.1198182,17z/data=!3m1!4b1!4m6!3m5!1s0x548673dd16423f87:0x20f4af12818e94a4!8m2!3d49.2634083!4d-123.1172433!16s%2Fg%2F1thtp8pd!5m1!1e1?entry=ttu&g_ep=EgoyMDI2MTAxOS4wIKXMDSoASAFQAw%3D%3D" target="_blank" rel="noopener" class="inline-flex items-center space-x-2 text-xs uppercase tracking-widest text-champagne-600 hover:text-champagne-700 font-semibold">
+                            <span>Get Directions</span>
+                            <i class="fa-solid fa-arrow-right text-xs"></i>
+                        </a>
+                    </div>
+             
+                </div>
+
+                <div class="relative h-[420px] rounded-3xl overflow-hidden shadow-lg border-4 border-white">
+                    <iframe 
+                        title="Venue Map"
+                        class="w-full h-full border-0 grayscale hover:grayscale-0 transition-all duration-700" 
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d460.2949387960325!2d-123.11398934970374!3d49.26083647825986!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x548673e7b8d21d8d%3A0x46f25841adee0289!2s453%20W%2012th%20Ave%2C%20Vancouver%2C%20BC%20V5Y%201V4!5e0!3m2!1sen!2sca!4v1792742046740!5m2!1sen!2sca" 
+                        allowfullscreen="" 
+                        loading="lazy">
+                    </iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Section 
+    <section id="gallery" class="py-20 px-6 max-w-6xl mx-auto fade-in-section">
+        <div class="text-center mb-16">
+            <span class="text-champagne-600 uppercase text-xs tracking-widest font-semibold">Captured Moments</span>
+            <h2 class="font-serif text-4xl md:text-5xl text-gray-900 mt-2 font-normal">Engagement Gallery</h2>
+            <div class="w-12 h-0.5 bg-champagne-400 mx-auto mt-4"></div>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+            <div class="relative group overflow-hidden rounded-2xl cursor-pointer h-64 md:h-80" onclick="openLightbox('https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&amp;fit=crop&amp;q=80&amp;w=1200')">
+                <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&amp;fit=crop&amp;q=80&amp;w=600" alt="Engagement 1" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-2xl">
+                    <i class="fa-solid fa-magnifying-glass-plus"></i>
+                </div>
+            </div>
+            <div class="relative group overflow-hidden rounded-2xl cursor-pointer h-64 md:h-80" onclick="openLightbox('https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&amp;fit=crop&amp;q=80&amp;w=1200')">
+                <img src="https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&amp;fit=crop&amp;q=80&amp;w=600" alt="Engagement 2" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-2xl">
+                    <i class="fa-solid fa-magnifying-glass-plus"></i>
+                </div>
+            </div>
+            <div class="relative group overflow-hidden rounded-2xl cursor-pointer h-64 md:h-80" onclick="openLightbox('https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&amp;fit=crop&amp;q=80&amp;w=1200')">
+                <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&amp;fit=crop&amp;q=80&amp;w=600" alt="Engagement 3" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-2xl">
+                    <i class="fa-solid fa-magnifying-glass-plus"></i>
+                </div>
+            </div>
+            <div class="relative group overflow-hidden rounded-2xl cursor-pointer h-64 md:h-80" onclick="openLightbox('https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?auto=format&amp;fit=crop&amp;q=80&amp;w=1200')">
+                <img src="https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?auto=format&amp;fit=crop&amp;q=80&amp;w=600" alt="Engagement 4" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-2xl">
+                    <i class="fa-solid fa-magnifying-glass-plus"></i>
+                </div>
+            </div>
+            <div class="relative group overflow-hidden rounded-2xl cursor-pointer h-64 md:h-80" onclick="openLightbox('https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&amp;fit=crop&amp;q=80&amp;w=1200')">
+                <img src="https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&amp;fit=crop&amp;q=80&amp;w=600" alt="Engagement 5" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-2xl">
+                    <i class="fa-solid fa-magnifying-glass-plus"></i>
+                </div>
+            </div>
+            <div class="relative group overflow-hidden rounded-2xl cursor-pointer h-64 md:h-80" onclick="openLightbox('https://images.unsplash.com/photo-1529636798458-92182e662485?auto=format&amp;fit=crop&amp;q=80&amp;w=1200')">
+                <img src="https://images.unsplash.com/photo-1529636798458-92182e662485?auto=format&amp;fit=crop&amp;q=80&amp;w=600" alt="Engagement 6" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700">
+                <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white text-2xl">
+                    <i class="fa-solid fa-magnifying-glass-plus"></i>
+                </div>
+            </div>
+        </div>
+    </section>
+-->
+    <!-- Lightbox Modal -->
+    <div id="lightbox" class="fixed inset-0 bg-black/90 z-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300 p-4">
+        <button onclick="closeLightbox()" class="absolute top-6 right-6 text-white text-3xl focus:outline-none hover:text-champagne-300">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+        <img id="lightbox-img" src="" alt="Enlarged view" class="max-w-full max-h-[85vh] rounded-lg shadow-2xl object-contain">
+    </div>
+
+    <!-- RSVP Section -->
+    <section id="rsvp" class="py-20 px-6 bg-sage-800 text-white relative overflow-hidden fade-in-section">
+        <div class="max-w-3xl mx-auto relative z-10">
+            <div class="text-center mb-12">
+                <span class="text-champagne-300 uppercase text-xs tracking-widest font-semibold">Kindly Respond By November 1, 2026</span>
+                <h2 class="font-serif text-4xl md:text-5xl text-white mt-2 font-normal">RSVP</h2>
+                <p class="text-gray-300 font-light text-sm mt-2">Please fill out the form below to confirm your attendance.</p>
+                <div class="w-12 h-0.5 bg-champagne-400 mx-auto mt-4"></div>
+            </div>
+
+            <div class="glass-dark p-8 md:p-12 rounded-3xl shadow-2xl">
+                <!-- Success Message -->
+                <div id="rsvp-success" class="hidden text-center py-10 space-y-4">
+                    <div class="w-20 h-20 mx-auto bg-champagne-500/20 text-champagne-300 rounded-full flex items-center justify-center text-4xl mb-4 border border-champagne-400">
+                        <i class="fa-solid fa-check"></i>
+                    </div>
+                    <h3 class="font-serif text-3xl text-white">Thank You!</h3>
+                    <p class="text-gray-300 font-light text-sm max-w-md mx-auto">
+                        Your RSVP response has been received. We look forward to celebrating with you!
+                    </p>
+                    <button onclick="resetRsvpForm()" class="mt-6 text-xs uppercase tracking-widest text-champagne-300 underline hover:text-white">
+                        Submit another response
+                    </button>
+                </div>
+
+                <!-- Form -->
+                <form id="rsvp-form" onsubmit="handleRsvpSubmit(event)" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-xs uppercase tracking-widest text-gray-300 mb-2 font-medium">Full Name *</label>
+                            <input id="rsvp-name" type="text" required placeholder="Jane &amp; John Doe" class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-champagne-400 transition-colors text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs uppercase tracking-widest text-gray-300 mb-2 font-medium">Email Address *</label>
+                            <input id="rsvp-email" type="email" required placeholder="jane@example.com" class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-champagne-400 transition-colors text-sm">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-xs uppercase tracking-widest text-gray-300 mb-2 font-medium">Attendance Status *</label>
+                            <div class="grid grid-cols-2 gap-2">
+                                <label class="flex items-center space-x-2 bg-white/5 border border-white/15 p-3 rounded-xl cursor-pointer hover:bg-white/10 transition-colors">
+                                    <input type="radio" name="attendance" value="accept" checked class="accent-champagne-500">
+                                    <span class="text-xs text-gray-200">Accepts</span>
+                                </label>
+                                <label class="flex items-center space-x-2 bg-white/5 border border-white/15 p-3 rounded-xl cursor-pointer hover:bg-white/10 transition-colors">
+                                    <input type="radio" name="attendance" value="decline" class="accent-champagne-500">
+                                    <span class="text-xs text-gray-200">Declines</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs uppercase tracking-widest text-gray-300 mb-2 font-medium">Number of Guests *</label>
+                            <input id="rsvp-guests" type="number" min="1" max="5" value="1" required class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-champagne-400 transition-colors text-sm">
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        
+
+                    <div>
+                        <label class="block text-xs uppercase tracking-widest text-gray-300 mb-2 font-medium">Message for Couple</label>
+                        <textarea id="rsvp-note" rows="2" placeholder="Optional wish or note" class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-white placeholder-gray-400 focus:outline-none focus:border-champagne-400 transition-colors text-sm"></textarea>
+                    </div>
+
+                    <button type="submit" class="w-full bg-champagne-500 hover:bg-champagne-600 text-gray-900 font-semibold py-4 rounded-xl uppercase text-xs tracking-widest transition-all duration-300 shadow-lg hover:shadow-champagne-500/20">
+                        Send RSVP Response
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Registry Section -->
+    <section id="registry" class="py-20 px-6 max-w-5xl mx-auto text-center fade-in-section">
+        <div class="mb-16">
+            <span class="text-champagne-600 uppercase text-xs tracking-widest font-semibold">Gift Ideas</span>
+            <h2 class="font-serif text-4xl md:text-5xl text-gray-900 mt-2 font-normal">Gift Registry</h2>
+            <p class="text-gray-500 font-light text-sm mt-2 max-w-lg mx-auto">
+                Your presence at our wedding is the greatest gift of all. If you wish to honor us with a gift, we have registered at:
+            </p>
+            <div class="w-12 h-0.5 bg-champagne-400 mx-auto mt-4"></div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="bg-white p-8 rounded-3xl shadow-sm border border-champagne-100 flex flex-col items-center hover:shadow-xl transition-all duration-300">
+                <div class="w-16 h-16 rounded-full bg-champagne-100 text-champagne-600 flex items-center justify-center text-2xl mb-4">
+                    <i class="fa-solid fa-plane-departure"></i>
+                </div>
+                <h3 class="font-serif text-2xl text-gray-800 mb-2">Honeymoon Fund</h3>
+                <p class="text-gray-500 text-xs font-light mb-6">Help us create memories on our dream trip to Spain.</p>
+                <button type="button" onclick="openFundModal()" class="mt-auto px-6 py-2.5 rounded-full border border-champagne-500 text-champagne-600 text-xs uppercase tracking-widest font-semibold hover:bg-champagne-500 hover:text-white transition-colors">
+                    Contribute
+                </button>
+            </div>
+
+            <div class="bg-white p-8 rounded-3xl shadow-sm border border-champagne-100 flex flex-col items-center hover:shadow-xl transition-all duration-300">
+                <div class="w-16 h-16 rounded-full bg-champagne-100 text-champagne-600 flex items-center justify-center text-2xl mb-4">
+                    <i class="fa-solid fa-house-laptop"></i>
+                </div>
+                <h3 class="font-serif text-2xl text-gray-800 mb-2">Crate &amp; Barrel</h3>
+                <p class="text-gray-500 text-xs font-light mb-6">Browse our registry for home and kitchen essentials.</p>
+                <a href="https://www.crateandbarrel.com" target="_blank" rel="noopener" class="mt-auto px-6 py-2.5 rounded-full border border-champagne-500 text-champagne-600 text-xs uppercase tracking-widest font-semibold hover:bg-champagne-500 hover:text-white transition-colors">
+                    View Registry
+                </a>
+            </div>
+
+            <div class="bg-white p-8 rounded-3xl shadow-sm border border-champagne-100 flex flex-col items-center hover:shadow-xl transition-all duration-300">
+                <div class="w-16 h-16 rounded-full bg-champagne-100 text-champagne-600 flex items-center justify-center text-2xl mb-4">
+                    <i class="fa-solid fa-bullseye"></i>
+                </div>
+                <h3 class="font-serif text-2xl text-gray-800 mb-2">Target Registry</h3>
+                <p class="text-gray-500 text-xs font-light mb-6">Everyday items for our new home together.</p>
+                <a href="https://www.target.com" target="_blank" rel="noopener" class="mt-auto px-6 py-2.5 rounded-full border border-champagne-500 text-champagne-600 text-xs uppercase tracking-widest font-semibold hover:bg-champagne-500 hover:text-white transition-colors">
+                    View Registry
+                </a>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- Honeymoon contribution: payment instructions only; payments happen in the sender's banking app -->
+    <div id="fund-modal" class="fixed inset-0 z-[60] hidden bg-black/75 p-4 overflow-y-auto" role="dialog" aria-modal="true" aria-labelledby="fund-title">
+      <div class="bg-ivory rounded-3xl max-w-xl mx-auto my-8 p-7 md:p-10 relative shadow-2xl border border-champagne-300">
+        <button type="button" onclick="closeFundModal()" aria-label="Close" class="absolute right-5 top-4 text-2xl text-sage-800">&times;</button>
+        <div class="text-center mb-6"><span class="text-champagne-600 text-xs uppercase tracking-widest">Richard &amp; Kim</span><h2 id="fund-title" class="font-serif text-4xl text-sage-800">Our Honeymoon Fund</h2><p class="text-sm text-gray-600 mt-2">Your presence is the greatest gift. If you'd like to contribute to our honeymoon in Spain, choose a transfer method below.</p></div>
+        <div class="mb-6 bg-white rounded-2xl border border-champagne-200 p-5">
+          <p class="text-xs uppercase tracking-widest text-sage-700 font-semibold mb-3">Choose a contribution amount</p>
+          <div class="grid grid-cols-4 gap-2" id="fund-amount-buttons">
+            <button type="button" onclick="selectFundAmount(25)" class="fund-amount-btn rounded-xl border border-sage-200 py-3 text-sm">$25</button>
+            <button type="button" onclick="selectFundAmount(50)" class="fund-amount-btn rounded-xl border border-sage-200 py-3 text-sm">$50</button>
+            <button type="button" onclick="selectFundAmount(100)" class="fund-amount-btn rounded-xl border border-sage-200 py-3 text-sm">$100</button>
+            <button type="button" onclick="selectFundAmount('custom')" class="fund-amount-btn rounded-xl border border-sage-200 py-3 text-sm">Custom</button>
+          </div>
+          <label for="fund-custom-amount" class="block text-xs text-gray-600 mt-3">Custom amount (CAD or USD)</label>
+          <input id="fund-custom-amount" type="number" min="1" step="0.01" inputmode="decimal" placeholder="Enter amount" oninput="updateFundAmount()" class="w-full border border-sage-200 rounded-xl px-4 py-3 mt-1 text-sage-800" />
+          <p id="fund-amount-summary" class="mt-3 text-sm font-semibold text-sage-800" aria-live="polite">Suggested contribution: CAD $50.00</p>
+          <p class="text-xs text-gray-500 mt-1">The amount is a reference for your transfer. Enter it in your banking app or payment provider to complete the gift.</p>
+          <button type="button" onclick="copyFundAmount()" class="mt-3 text-xs text-champagne-600 underline">Copy selected amount</button>
+        </div>
+        <p class="text-xs uppercase tracking-widest text-sage-700 font-semibold mb-2">Where are you sending from?</p>
+        <div class="flex gap-2 mb-4">
+          <button type="button" onclick="showFundRegion('canada')" id="fund-canada-tab" class="flex-1 rounded-xl p-3 bg-sage-800 text-white text-sm">🇨🇦 Canada (CAD)</button>
+          <button type="button" onclick="showFundRegion('usa')" id="fund-usa-tab" class="flex-1 rounded-xl p-3 border border-sage-200 text-sage-800 text-sm">🇺🇸 United States (USD)</button>
+        </div>
+        <div id="fund-method-options" class="grid grid-cols-1 sm:grid-cols-3 gap-2 mb-4"></div>
+        <p id="fund-recipient-note" class="text-xs text-sage-700 mb-3"></p>
+        <div id="fund-instructions" class="bg-white rounded-2xl border border-champagne-200 p-5 text-sm space-y-3"></div>
+        <p class="text-xs text-gray-500 mt-4">Transfers are completed through your own bank or transfer provider. This website does not collect or process payments. Please verify the recipient details before sending.</p>
+      </div>
+    </div>
+
+    <!-- Guestbook Section -->
+    <section id="guestbook" class="py-20 px-6 bg-sage-50/60 border-y border-sage-100 fade-in-section">
+        <div class="max-w-4xl mx-auto">
+            <div class="text-center mb-12">
+                <span class="text-champagne-600 uppercase text-xs tracking-widest font-semibold">Warm Wishes</span>
+                <h2 class="font-serif text-4xl md:text-5xl text-gray-900 mt-2 font-normal">Guestbook &amp; Wishing Well</h2>
+                <p class="text-gray-500 text-sm mt-2">Leave a love note or congratulations for Richard &amp; Kim!</p>
+                <div class="w-12 h-0.5 bg-champagne-400 mx-auto mt-4"></div>
+            </div>
+
+            <div class="bg-white p-6 md:p-8 rounded-3xl shadow-sm border border-champagne-100 mb-12">
+                <form id="guestbook-form" onsubmit="handleGuestbookSubmit(event)" class="space-y-4">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <input id="gb-name" type="text" required placeholder="Your Name" class="w-full bg-ivory border border-champagne-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-champagne-500">
+                        <input id="gb-relation" type="text" placeholder="Relationship (e.g. Groom's Sister, Friend)" class="w-full bg-ivory border border-champagne-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-champagne-500">
+                    </div>
+                    <textarea id="gb-message" required rows="3" placeholder="Write your heartfelt note..." class="w-full bg-ivory border border-champagne-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-champagne-500"></textarea>
+                    <button type="submit" class="bg-champagne-500 hover:bg-champagne-600 text-gray-900 text-xs uppercase tracking-widest font-semibold px-8 py-3 rounded-full transition-colors shadow">
+                        Post Wishing Note
+                    </button>
+                </form>
+            </div>
+
+            <div id="guestbook-list" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Dynamically Populated -->
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="py-20 px-6 max-w-4xl mx-auto fade-in-section">
+        <div class="text-center mb-16">
+            <span class="text-champagne-600 uppercase text-xs tracking-widest font-semibold">Helpful Information</span>
+            <h2 class="font-serif text-4xl md:text-5xl text-gray-900 mt-2 font-normal">Frequently Asked Questions</h2>
+            <div class="w-12 h-0.5 bg-champagne-400 mx-auto mt-4"></div>
+        </div>
+
+        <div class="space-y-4">
+            <div class="bg-white rounded-2xl border border-champagne-100 overflow-hidden shadow-sm">
+                <button onclick="toggleFaq(this)" class="w-full p-6 text-left flex justify-between items-center focus:outline-none">
+                    <span class="font-serif text-xl text-gray-800">What is the dress code?</span>
+                    <i class="fa-solid fa-plus text-champagne-600 text-sm transition-transform duration-300"></i>
+                </button>
+                <div class="faq-content max-h-0 overflow-hidden transition-all duration-300 px-6 bg-ivory">
+                    <p class="text-gray-600 font-light text-sm pb-6 leading-relaxed">
+                        The dress code is Semi-Formal / Cocktail Attire. Floor-length gowns, cocktail dresses, tuxedos, or elegant suits are welcome!
+                    </p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl border border-champagne-100 overflow-hidden shadow-sm">
+                <button onclick="toggleFaq(this)" class="w-full p-6 text-left flex justify-between items-center focus:outline-none">
+                    <span class="font-serif text-xl text-gray-800">Are children allowed at the wedding?</span>
+                    <i class="fa-solid fa-plus text-champagne-600 text-sm transition-transform duration-300"></i>
+                </button>
+                <div class="faq-content max-h-0 overflow-hidden transition-all duration-300 px-6 bg-ivory">
+                    <p class="text-gray-600 font-light text-sm pb-6 leading-relaxed">
+                        Absolutely! Children are welcome to join us as we celebrate our special day. We’re happy to share this meaningful moment with your whole family, including the little ones!
+                    </p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-2xl border border-champagne-100 overflow-hidden shadow-sm">
+                <button onclick="toggleFaq(this)" class="w-full p-6 text-left flex justify-between items-center focus:outline-none">
+                    <span class="font-serif text-xl text-gray-800">What time should I arrive?</span>
+                    <i class="fa-solid fa-plus text-champagne-600 text-sm transition-transform duration-300"></i>
+                </button>
+                <div class="faq-content max-h-0 overflow-hidden transition-all duration-300 px-6 bg-ivory">
+                    <p class="text-gray-600 font-light text-sm pb-6 leading-relaxed">
+                        We kindly ask our guests to arrive 30 minutes before the scheduled ceremony time to allow everyone to settle in before the celebration begins..
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-sage-900 text-white py-16 px-6 text-center border-t border-champagne-500/20">
+        <div class="max-w-2xl mx-auto space-y-6">
+            <h3 class="font-serif text-4xl tracking-widest font-light">
+                Richard <span class="font-script text-champagne-300 lowercase text-5xl">&amp;</span> Kim
+            </h3>
+            <p class="text-xs uppercase tracking-widest text-champagne-300">December 4, 2026 • Vancouver City Hall, British Columbia</p>
+            <div class="w-12 h-0.5 bg-champagne-500/40 mx-auto"></div>
+            <button onclick="openHostModal()" class="text-xs uppercase tracking-widest text-champagne-400/80 hover:text-champagne-300 underline">
+                Host Admin Portal
+            </button>
+            <p class="text-xs text-gray-400 font-light block">
+                Designed with love for our friends and family. #RichardAndKim2026
+            </p>
+        </div>
+    </footer>
+
+    <!-- Host Login Passcode Modal -->
+    <div id="host-login-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center opacity-0 pointer-events-none transition-opacity duration-300 p-4">
+        <div class="bg-gray-900 border border-champagne-500/40 rounded-3xl p-8 max-w-sm w-full text-center space-y-6 text-white shadow-2xl relative">
+            <button onclick="closeHostModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white text-xl">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+            <div class="w-12 h-12 bg-champagne-500/20 text-champagne-300 rounded-full flex items-center justify-center mx-auto text-xl border border-champagne-400">
+                <i class="fa-solid fa-lock"></i>
+            </div>
+            <div>
+                <h3 class="font-serif text-2xl text-white">Host Portal Access</h3>
+                <p class="text-xs text-gray-400 mt-1">Authorized hosts only</p>
+            </div>
+            <form onsubmit="verifyHostPasscode(event)" class="space-y-4">
+                <input id="host-passcode-input" type="password" required placeholder="Enter Passcode" class="w-full bg-gray-800 border border-gray-700 rounded-xl px-4 py-3 text-center text-white placeholder-gray-500 focus:outline-none focus:border-champagne-400 text-sm tracking-widest">
+                <p id="host-passcode-error" class="text-red-400 text-xs hidden">Incorrect passcode. Try again.</p>
+                <button type="submit" class="w-full bg-champagne-500 hover:bg-champagne-600 text-gray-900 font-semibold py-3 rounded-xl uppercase text-xs tracking-widest transition-colors">
+                    Unlock Dashboard
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Host Admin Portal Modal / Full Screen Dashboard -->
+    <div id="host-portal-dashboard" class="fixed inset-0 bg-gray-950 z-50 text-white overflow-y-auto hidden">
+        <div class="max-w-7xl mx-auto p-6 md:p-10 space-y-8">
+            
+            <!-- Dashboard Header -->
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-gray-800 pb-6 gap-4">
+                <div>
+                    <span class="text-xs text-champagne-400 uppercase tracking-widest font-semibold">Wedding Host Dashboard</span>
+                    <h2 class="font-serif text-3xl md:text-4xl text-white">Richard &amp; Kim's Responses</h2>
+                </div>
+                <div class="flex items-center space-x-3">
+                    <button onclick="exportRSVPCSV()" class="bg-champagne-500 hover:bg-champagne-600 text-gray-900 px-4 py-2.5 rounded-xl text-xs uppercase tracking-widest font-semibold flex items-center space-x-2 transition-colors">
+                        <i class="fa-solid fa-download"></i>
+                        <span>Export CSV</span>
+                    </button>
+                    <button onclick="closeHostDashboard()" class="bg-gray-800 hover:bg-gray-700 text-gray-300 px-4 py-2.5 rounded-xl text-xs uppercase tracking-widest font-semibold transition-colors">
+                        Exit Portal
+                    </button>
+                </div>
+            </div>
+
+
+            <div class="bg-gray-900 border border-gray-800 rounded-2xl p-6 space-y-4">
+              <h3 class="font-serif text-2xl text-champagne-300">Honeymoon Fund Payment Settings</h3>
+              <p class="text-xs text-gray-400">Kim receives Canadian Interac contributions; Richard receives US contributions through Zelle, PayPal, or US bank transfer. Edit the details here; saved changes become available to guests immediately.</p>
+              <div class="grid md:grid-cols-2 gap-3" id="fund-settings-fields"></div>
+              <button type="button" onclick="saveFundSettings()" class="bg-champagne-500 text-gray-900 rounded-xl px-5 py-3 text-xs font-semibold">Save Payment Settings</button>
+              <p id="fund-settings-status" class="text-xs text-gray-300" aria-live="polite"></p>
+            </div>
+
+            <!-- KPI Stats Summary -->
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-4">
+                <div class="bg-gray-900 border border-gray-800 rounded-2xl p-5 text-center">
+                    <span class="text-xs uppercase text-gray-400 tracking-wider font-medium">Total RSVPs</span>
+                    <p id="stat-total-rsvps" class="font-serif text-3xl md:text-4xl text-champagne-300 font-semibold mt-1">0</p>
+                </div>
+                <div class="bg-emerald-950/30 border border-emerald-800/30 rounded-2xl p-5 text-center">
+                    <span class="text-xs uppercase text-sage-300 tracking-wider font-medium">Total Attending</span>
+                    <p id="stat-total-attending" class="font-serif text-3xl md:text-4xl text-emerald-400 font-semibold mt-1">0</p>
+                </div>
+                <div class="bg-red-950/30 border border-red-800/30 rounded-2xl p-5 text-center">
+                    <span class="text-xs uppercase text-red-300 tracking-wider font-medium">Declined</span>
+                    <p id="stat-total-declined" class="font-serif text-3xl md:text-4xl text-red-400 font-semibold mt-1">0</p>
+                </div>
+                <div class="bg-champagne-500/10 border border-champagne-400/30 rounded-2xl p-5 text-center col-span-2 md:col-span-2">
+                    <span class="text-xs uppercase text-champagne-300 tracking-wider font-medium block">Response Storage</span>
+                    <div id="stat-meal-breakdown" class="text-xs text-gray-300 mt-2 flex justify-around">
+                        <!-- Populated JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabs Nav -->
+            <div class="flex border-b border-gray-800 space-x-6">
+                <button id="tab-rsvp-btn" onclick="switchHostTab('rsvp')" class="pb-3 text-sm font-semibold uppercase tracking-wider text-champagne-400 border-b-2 border-champagne-400 transition-colors">
+                    RSVP Responses (<span id="rsvp-count-badge">0</span>)
+                </button>
+                <button id="tab-guestbook-btn" onclick="switchHostTab('guestbook')" class="pb-3 text-sm font-semibold uppercase tracking-wider text-gray-400 hover:text-white transition-colors">
+                    Guestbook Notes (<span id="guestbook-count-badge">0</span>)
+                </button>
+            </div>
+
+            <!-- TAB 1: RSVP Table -->
+            <div id="tab-rsvp-content" class="space-y-4">
+                <div class="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3">
+                    <input id="rsvp-search-input" onkeyup="filterRSVPTable()" type="text" placeholder="Search by name, email or notes..." class="bg-gray-900 border border-gray-800 rounded-xl px-4 py-2.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-champagne-400 w-full sm:w-72">
+                    <select id="rsvp-filter-status" onchange="filterRSVPTable()" class="bg-gray-900 border border-gray-800 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-champagne-400">
+                        <option value="all">All Statuses</option>
+                        <option value="accept">Joyfully Accepts</option>
+                        <option value="decline">Regretfully Declines</option>
+                    </select>
+                </div>
+
+                <div class="bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden shadow-xl overflow-x-auto">
+                    <table class="w-full text-left border-collapse min-w-[750px]">
+                        <thead>
+                            <tr class="bg-gray-950 text-gray-400 text-[11px] uppercase tracking-wider border-b border-gray-800">
+                                <th class="p-4">Respondent</th>
+                                <th class="p-4">Status</th>
+                                <th class="p-4">Party Size</th>
+                                <th class="p-4">Email</th>
+                                <th class="p-4">Message</th>
+                                <th class="p-4">Date</th>
+                                <th class="p-4 text-right">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="host-rsvp-tbody" class="divide-y divide-gray-800 text-sm">
+                            <!-- Populated JS -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- TAB 2: Guestbook Moderation -->
+            <div id="tab-guestbook-content" class="hidden space-y-4">
+                <div id="host-guestbook-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <!-- Populated JS -->
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- JavaScript Logic -->
+    <script>
+
+        // Public payment details. Edit through Host Portal and export the updated HTML to publish.
+        const FUND_DEFAULTS = {kimName:'Kim',kimInterac:'',richardName:'Richard',richardZelle:'',richardPaypal:'',richardBank:'',richardRouting:'',richardAccount:'',richardAccountType:'Checking'};
+        const FUND_FIELDS = {kimName:"Kim — recipient name (Canada)",kimInterac:"Kim — Interac e-Transfer email (CAD)",richardName:"Richard — recipient name (USA)",richardZelle:"Richard — Zelle email or US phone number",richardPaypal:"Richard — PayPal email or HTTPS payment link",richardBank:"Richard — US bank name",richardRouting:"Richard — US ACH routing number (9 digits)",richardAccount:"Richard — US account number",richardAccountType:"Richard — account type (Checking or Savings)"};
+        function fundSettings(){try{return {...FUND_DEFAULTS,...JSON.parse(localStorage.getItem('rk_fund_settings_v3')||'{}')}}catch(e){return {...FUND_DEFAULTS}}}
+        function fundField(key,value){const label=document.createElement('label');label.className='block text-xs text-gray-300';label.textContent=FUND_FIELDS[key];const input=document.createElement('input');input.id='fund-setting-'+key;input.value=value||'';input.placeholder=FUND_FIELDS[key];input.className='block mt-1 w-full bg-gray-800 border border-gray-700 rounded-lg px-3 py-2 text-white';label.appendChild(input);return label}
+        function renderFundSettings(){const root=document.getElementById('fund-settings-fields');root.replaceChildren();const data=fundSettings();Object.keys(FUND_FIELDS).forEach(k=>root.appendChild(fundField(k,data[k])))}
+        function collectFundSettings(){const data={};Object.keys(FUND_FIELDS).forEach(k=>data[k]=document.getElementById('fund-setting-'+k).value.trim());if(data.richardPaypal&&!(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.richardPaypal)||/^https:\/\/[^ ]+$/i.test(data.richardPaypal))){alert('Enter a PayPal email or full https:// payment link.');return null}if(data.richardRouting&&!/^\d{9}$/.test(data.richardRouting)){alert('US routing number must contain 9 digits.');return null}return data}
+        function saveFundSettings(){const data=collectFundSettings();if(!data)return false;localStorage.setItem('rk_fund_settings_v3',JSON.stringify(data));document.getElementById('fund-settings-status').textContent='Saved on this device. Download and publish the HTML to share with guests.';return true}
+        function downloadFundWebsite(){if(!saveFundSettings())return;const data=fundSettings();const clone=document.documentElement.cloneNode(true);clone.querySelector('#fund-modal').classList.add('hidden');const scripts=clone.querySelectorAll('script');const main=scripts[scripts.length-1];if(!main||!main.textContent.includes('FUND_DEFAULTS')){alert('Could not export website');return}main.textContent=main.textContent.replace(/const FUND_DEFAULTS = \{[^;]*\};/, 'const FUND_DEFAULTS = '+JSON.stringify(data).replace(/</g,'\\u003c')+';');const output='<!DOCTYPE html>\n'+clone.outerHTML;const a=document.createElement('a');const url=URL.createObjectURL(new Blob([output],{type:'text/html'}));a.href=url;a.download='richard_kim_wedding_published.html';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);document.getElementById('fund-settings-status').textContent='Downloaded. Publish this HTML file to update your website.'}
+        let fundAmount=50, fundRegion='canada',fundMethod='interac';
+        function selectFundAmount(amount){if(amount==='custom'){fundAmount=null;document.getElementById('fund-custom-amount').focus()}else{fundAmount=amount;document.getElementById('fund-custom-amount').value=''}updateFundAmountUI()}
+        function updateFundAmount(){const n=Number(document.getElementById('fund-custom-amount').value);fundAmount=Number.isFinite(n)&&n>=1?Math.round(n*100)/100:null;updateFundAmountUI()}
+        function updateFundAmountUI(){document.querySelectorAll('.fund-amount-btn').forEach((b,i)=>{const active=i<3?fundAmount===[25,50,100][i]:(fundAmount===null||![25,50,100].includes(fundAmount));b.className='fund-amount-btn rounded-xl border py-3 text-sm '+(active?'bg-sage-800 text-white border-sage-800':'border-sage-200 text-sage-800')});document.getElementById('fund-amount-summary').textContent=fundAmount===null?'Enter a contribution amount above':'Suggested contribution: '+(fundRegion==='canada'?'CAD':'USD')+' $'+fundAmount.toFixed(2)}
+        function copyFundAmount(){if(fundAmount===null){alert('Please enter an amount first.');return}navigator.clipboard.writeText(fundAmount.toFixed(2)).then(()=>alert('Amount copied. Enter it in your payment app.')).catch(()=>alert('Amount: $'+fundAmount.toFixed(2)))}
+        function closeFundModal(){document.getElementById('fund-modal').classList.add('hidden')}
+        function openFundModal(){document.getElementById('fund-modal').classList.remove('hidden');showFundRegion('canada')}
+        function showFundRegion(region){fundRegion=region;fundMethod=region==='canada'?'interac':'zelle';for(const r of ['canada','usa'])document.getElementById('fund-'+r+'-tab').className='flex-1 rounded-xl p-3 text-sm '+(r===region?'bg-sage-800 text-white':'border border-sage-200 text-sage-800');const options=document.getElementById('fund-method-options');options.replaceChildren();const methods=region==='canada'?[['interac','Interac e-Transfer']]:[['zelle','Zelle'],['paypal','PayPal'],['bank','Direct bank transfer']];methods.forEach(([key,label])=>{const btn=document.createElement('button');btn.type='button';btn.textContent=label;btn.dataset.method=key;btn.onclick=()=>showFundMethod(key);options.appendChild(btn)});showFundMethod(fundMethod);updateFundAmountUI()}
+        function showFundMethod(method){fundMethod=method;document.querySelectorAll('#fund-method-options button').forEach(b=>b.className='rounded-xl p-3 text-xs '+(b.dataset.method===method?'bg-sage-800 text-white':'border border-sage-200 text-sage-800'));const d=fundSettings(),root=document.getElementById('fund-instructions');root.replaceChildren();const recipient=fundRegion==='canada'?d.kimName:d.richardName;document.getElementById('fund-recipient-note').textContent=fundRegion==='canada'?'Canadian Interac gifts go to Kim (CAD).':'US gifts go to Richard (USD).';function row(label,value){if(!value)return false;const el=document.createElement('div');el.className='flex justify-between items-center gap-3 border-b border-gray-100 pb-2';const left=document.createElement('div');const name=document.createElement('div');name.className='text-xs text-gray-500';name.textContent=label;const val=document.createElement('div');val.className='font-medium break-all text-sage-800';val.textContent=value;left.append(name,val);const copy=document.createElement('button');copy.type='button';copy.className='text-champagne-600 text-xs border rounded-lg p-2';copy.textContent='Copy';copy.onclick=()=>navigator.clipboard.writeText(value).then(()=>copy.textContent='Copied').catch(()=>alert('Please copy manually'));el.append(left,copy);root.appendChild(el);return true}
+          let ready=false;row('Recipient',recipient);
+          if(method==='interac'){ready=row('Interac e-Transfer email',d.kimInterac)}
+          if(method==='zelle'){ready=row('Zelle email or US phone',d.richardZelle)}
+          if(method==='paypal'){if(d.richardPaypal&&d.richardPaypal.includes('@')&&!d.richardPaypal.startsWith('https://')){ready=row('PayPal recipient email',d.richardPaypal)}else if(d.richardPaypal){try{const u=new URL(d.richardPaypal);if(u.protocol==='https:'){const a=document.createElement('a');a.href=u.href;a.target='_blank';a.rel='noopener noreferrer';a.className='block text-center bg-sage-800 text-white p-3 rounded-xl';a.textContent='Open Richard’s PayPal payment link';root.appendChild(a);ready=true}}catch(e){}}}
+          if(method==='bank'){const bankSet=row('US bank',d.richardBank);const routingSet=row('ACH routing number',d.richardRouting);const accountSet=row('Account number',d.richardAccount);ready=bankSet&&routingSet&&accountSet;row('Account type',d.richardAccountType)}
+          if(!ready){const p=document.createElement('p');p.className='text-gray-500';p.textContent='This payment method has not been fully configured. Please check back later.';root.appendChild(p)}
+          const note=document.createElement('p');note.className='text-xs text-gray-500';note.textContent=method==='bank'?'US domestic bank transfers only. Check with your bank for supported ACH transfers; do not use these details for international wires.':method==='zelle'?'Open Zelle in your participating US bank app and send to Richard using the details above.':'Complete the payment in your bank or payment provider. The amount is not automatically transferred.';root.appendChild(note)
+        }
+        document.addEventListener('DOMContentLoaded',renderFundSettings);
+
+        // Sample Pre-populated Data
+        const SAMPLE_RSVPS = [
+            {
+                id: '1',
+                name: 'Sarah Miller & Mark Vance',
+                email: 'sarah.m@example.com',
+                attendance: 'accept',
+                guests: 2,
+                meal: 'beef',
+                dietary: 'None',
+                song: 'At Last - Etta James',
+                note: 'So thrilled to celebrate with you guys!',
+                date: '2026-10-15'
+            },
+            {
+                id: '2',
+                name: 'David Tan',
+                email: 'david.tan@example.com',
+                attendance: 'accept',
+                guests: 1,
+                meal: 'salmon',
+                dietary: 'Gluten-free',
+                song: 'September - Earth, Wind & Fire',
+                note: 'Can not wait for Napa Valley!',
+                date: '2026-10-18'
+            },
+            {
+                id: '3',
+                name: 'Aunt Brenda & Uncle Tom',
+                email: 'brenda.t@example.com',
+                attendance: 'decline',
+                guests: 2,
+                meal: 'vegetarian',
+                dietary: 'Nut allergy',
+                song: '',
+                note: 'Sending all our love from Florida!',
+                date: '2026-10-20'
+            }
+        ];
+
+        const SAMPLE_GUESTBOOK = [
+            {
+                id: '1',
+                name: 'Sarah & Mark',
+                relation: 'College Friends',
+                message: 'So beyond happy for you both! We can’t wait to toast to your forever love in Napa Valley. Love you guys!',
+                date: '2026-10-15'
+            },
+            {
+                id: '2',
+                name: 'Aunt Helen',
+                relation: "Kim's Family",
+                message: 'Wishing Richard and Kim a lifetime of endless joy, laughter, and beautiful adventures together. See you soon!',
+                date: '2026-10-18'
+            }
+        ];
+
+        // Local Storage Helpers
+        function getStoredRSVPs() {
+            const data = localStorage.getItem('rk_wedding_rsvps');
+            if (!data) {
+                localStorage.setItem('rk_wedding_rsvps', JSON.stringify([]));
+                return [];
+            }
+            return JSON.parse(data);
+        }
+
+        function saveStoredRSVPs(list) {
+            localStorage.setItem('rk_wedding_rsvps', JSON.stringify(list));
+        }
+
+        function getStoredGuestbook() {
+            const data = localStorage.getItem('rk_wedding_guestbook');
+            if (!data) {
+                localStorage.setItem('rk_wedding_guestbook', JSON.stringify(SAMPLE_GUESTBOOK));
+                return SAMPLE_GUESTBOOK;
+            }
+            return JSON.parse(data);
+        }
+
+        function saveStoredGuestbook(list) {
+            localStorage.setItem('rk_wedding_guestbook', JSON.stringify(list));
+        }
+
+        // Navigation Scroll Effect
+        const navbar = document.getElementById('navbar');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const closeMenuBtn = document.getElementById('close-menu-btn');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('bg-sage-900/90', 'backdrop-blur-md', 'shadow-lg', 'py-3');
+                navbar.classList.remove('py-4', 'bg-transparent');
+            } else {
+                navbar.classList.remove('bg-sage-900/90', 'backdrop-blur-md', 'shadow-lg', 'py-3');
+                navbar.classList.add('py-4', 'bg-transparent');
+            }
+        });
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.remove('opacity-0', 'pointer-events-none');
+        });
+
+        const closeDrawer = () => {
+            mobileMenu.classList.add('opacity-0', 'pointer-events-none');
+        };
+
+        closeMenuBtn.addEventListener('click', closeDrawer);
+        document.querySelectorAll('.mobile-nav-link').forEach(link => link.addEventListener('click', closeDrawer));
+
+        // Countdown Timer - Dec 4, 2026 at 11:30 AM
+        const weddingDate = new Date('December 4, 2026 11:30:00').getTime();
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const difference = weddingDate - now;
+
+            if (difference > 0) {
+                const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+                document.getElementById('days').innerText = String(days).padStart(2, '0');
+                document.getElementById('hours').innerText = String(hours).padStart(2, '0');
+                document.getElementById('minutes').innerText = String(minutes).padStart(2, '0');
+                document.getElementById('seconds').innerText = String(seconds).padStart(2, '0');
+            } else {
+                document.getElementById('days').innerText = "00";
+                document.getElementById('hours').innerText = "00";
+                document.getElementById('minutes').innerText = "00";
+                document.getElementById('seconds').innerText = "00";
+            }
+        }
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+
+        // Lightbox
+        function openLightbox(url) {
+            const lightbox = document.getElementById('lightbox');
+            const img = document.getElementById('lightbox-img');
+            img.src = url;
+            lightbox.classList.remove('opacity-0', 'pointer-events-none');
+        }
+
+        function closeLightbox() {
+            const lightbox = document.getElementById('lightbox');
+            lightbox.classList.add('opacity-0', 'pointer-events-none');
+        }
+
+        // FAQ Toggle
+        function toggleFaq(btn) {
+            const content = btn.nextElementSibling;
+            const icon = btn.querySelector('i');
+
+            if (content.style.maxHeight && content.style.maxHeight !== '0px') {
+                content.style.maxHeight = '0px';
+                icon.classList.remove('rotate-45');
+            } else {
+                content.style.maxHeight = content.scrollHeight + 'px';
+                icon.classList.add('rotate-45');
+            }
+        }
+
+        // RSVP Submission
+        function handleRsvpSubmit(e) {
+            e.preventDefault();
+            const name = document.getElementById('rsvp-name').value.trim();
+            const email = document.getElementById('rsvp-email').value.trim();
+            const attendance = document.querySelector('input[name="attendance"]:checked').value;
+            const guests = parseInt(document.getElementById('rsvp-guests').value) || 1;
+            const meal = document.getElementById('rsvp-meal')?.value || ''; 
+            const dietary = document.getElementById('rsvp-diet')?.value.trim() || 'None';
+            const song = document.getElementById('rsvp-song')?.value.trim() || ''; 
+            const note = document.getElementById('rsvp-note').value.trim();
+
+            const newRSVP = {
+                id: Date.now().toString(),
+                name,
+                email,
+                attendance,
+                guests,
+                meal,
+                dietary,
+                song,
+                note,
+                date: new Date().toISOString().split('T')[0]
+            };
+
+            const rsvps = getStoredRSVPs();
+            rsvps.unshift(newRSVP);
+            saveStoredRSVPs(rsvps);
+            loadHostDashboardData();
+
+            document.getElementById('rsvp-form').classList.add('hidden');
+            document.getElementById('rsvp-success').classList.remove('hidden');
+        }
+
+        function resetRsvpForm() {
+            document.getElementById('rsvp-form').reset();
+            document.getElementById('rsvp-form').classList.remove('hidden');
+            document.getElementById('rsvp-success').classList.add('hidden');
+        }
+
+        // Guestbook Submission & Render
+        function renderGuestbook() {
+            const list = getStoredGuestbook();
+            const container = document.getElementById('guestbook-list');
+            container.innerHTML = '';
+
+            list.forEach(item => {
+                const card = document.createElement('div');
+                card.className = "bg-white p-6 rounded-2xl border border-champagne-100 shadow-sm space-y-2 relative";
+                card.innerHTML = `
+                    <div class="flex justify-between items-center">
+                        <h4 class="font-serif text-xl text-gray-800">${escapeHtml(item.name)}</h4>
+                        <span class="text-[10px] text-gray-400">${item.date}</span>
+                    </div>
+                    <span class="text-[11px] text-champagne-600 uppercase font-medium block">${escapeHtml(item.relation || 'Guest')}</span>
+                    <p class="text-gray-600 text-sm font-light leading-relaxed">"${escapeHtml(item.message)}"</p>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function handleGuestbookSubmit(e) {
+            e.preventDefault();
+            const name = document.getElementById('gb-name').value.trim();
+            const relation = document.getElementById('gb-relation').value.trim();
+            const message = document.getElementById('gb-message').value.trim();
+
+            const newNote = {
+                id: Date.now().toString(),
+                name,
+                relation,
+                message,
+                date: new Date().toISOString().split('T')[0]
+            };
+
+            const notes = getStoredGuestbook();
+            notes.unshift(newNote);
+            saveStoredGuestbook(notes);
+
+            document.getElementById('guestbook-form').reset();
+            renderGuestbook();
+        }
+
+        // Host Portal Management
+        function openHostModal() {
+            document.getElementById('host-login-modal').classList.remove('opacity-0', 'pointer-events-none');
+        }
+
+        function closeHostModal() {
+            document.getElementById('host-login-modal').classList.add('opacity-0', 'pointer-events-none');
+            document.getElementById('host-passcode-error').classList.add('hidden');
+        }
+
+        function verifyHostPasscode(e) {
+            e.preventDefault();
+            const code = document.getElementById('host-passcode-input').value.trim();
+            if (false) {
+                closeHostModal();
+                openHostDashboard();
+            } else {
+                document.getElementById('host-passcode-error').classList.remove('hidden');
+            }
+        }
+
+        function openHostDashboard() {
+            document.getElementById('host-portal-dashboard').classList.remove('hidden');
+            loadHostDashboardData();
+        }
+
+        function closeHostDashboard() {
+            document.getElementById('host-portal-dashboard').classList.add('hidden');
+        }
+
+        function loadHostDashboardData() {
+            const rsvps = getStoredRSVPs();
+            const guestbook = getStoredGuestbook();
+
+            // Stats Calculations
+            const totalRSVPs = rsvps.length;
+            const totalAttending = rsvps.reduce((acc, curr) => curr.attendance === 'accept' ? acc + (parseInt(curr.guests) || 1) : acc, 0);
+            const totalDeclined = rsvps.filter(r => r.attendance === 'decline').length;
+
+            const meals = { beef: 0, salmon: 0, vegetarian: 0 };
+            rsvps.forEach(r => {
+                if (r.attendance === 'accept' && r.meal) {
+                    meals[r.meal] = (meals[r.meal] || 0) + (parseInt(r.guests) || 1);
+                }
+            });
+
+            document.getElementById('stat-total-rsvps').innerText = totalRSVPs;
+            document.getElementById('stat-total-attending').innerText = totalAttending;
+            document.getElementById('stat-total-declined').innerText = totalDeclined;
+            document.getElementById('stat-meal-breakdown').textContent = 'Guest responses saved in this browser';
+
+            document.getElementById('rsvp-count-badge').innerText = totalRSVPs;
+            document.getElementById('guestbook-count-badge').innerText = guestbook.length;
+
+            renderHostRSVPTable(rsvps);
+            renderHostGuestbookGrid(guestbook);
+        }
+
+        function renderHostRSVPTable(list) {
+            const tbody = document.getElementById('host-rsvp-tbody');
+            tbody.innerHTML = '';
+
+            if (list.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="p-6 text-center text-gray-500">No RSVP responses match the current filter.</td></tr>`;
+                return;
+            }
+
+            list.forEach(r => {
+                const tr = document.createElement('tr');
+                tr.className = "hover:bg-gray-800/50 transition-colors";
+                const isAccept = r.attendance === 'accept';
+                
+                tr.innerHTML = `
+                    <td class="p-4">
+                        <div class="font-medium text-white">${escapeHtml(r.name)}</div>
+                        <div class="text-xs text-gray-400">${escapeHtml(r.email)}</div>
+                    </td>
+                    <td class="p-4">
+                        <span class="inline-block px-2.5 py-1 text-[11px] font-semibold rounded-full ${isAccept ? 'bg-emerald-900/60 text-emerald-300 border border-emerald-700/50' : 'bg-red-900/60 text-red-300 border border-red-700/50'}">
+                            ${isAccept ? 'Accepts' : 'Declines'}
+                        </span>
+                    </td>
+                    <td class="p-4 text-gray-300 font-mono">${r.guests}</td>
+                    <td class="p-4 text-xs text-gray-300">
+                        <div class="text-gray-300">${escapeHtml(r.email || '')}</div>
+                    </td>
+                    <td class="p-4 text-xs text-gray-300 max-w-xs">
+                        
+                        ${r.note ? `<div class="italic text-gray-400 text-[11px] truncate">"${escapeHtml(r.note)}"</div>` : ''}
+                    </td>
+                    <td class="p-4 text-xs text-gray-400">${r.date}</td>
+                    <td class="p-4 text-right">
+                        <button onclick="deleteRSVP('${r.id}')" class="text-xs text-red-400 hover:text-red-300 p-1">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function filterRSVPTable() {
+            const query = document.getElementById('rsvp-search-input').value.toLowerCase();
+            const status = document.getElementById('rsvp-filter-status').value;
+            const rsvps = getStoredRSVPs();
+
+            const filtered = rsvps.filter(r => {
+                const matchesStatus = status === 'all' || r.attendance === status;
+                const matchesQuery = r.name.toLowerCase().includes(query) ||
+                                     r.email.toLowerCase().includes(query) ||
+                                     (r.song && r.song.toLowerCase().includes(query)) ||
+                                     (r.note && r.note.toLowerCase().includes(query));
+                return matchesStatus && matchesQuery;
+            });
+
+            renderHostRSVPTable(filtered);
+        }
+
+        function deleteRSVP(id) {
+            let rsvps = getStoredRSVPs();
+            rsvps = rsvps.filter(r => r.id !== id);
+            saveStoredRSVPs(rsvps);
+            loadHostDashboardData();
+        }
+
+        function renderHostGuestbookGrid(list) {
+            const grid = document.getElementById('host-guestbook-grid');
+            grid.innerHTML = '';
+
+            list.forEach(item => {
+                const card = document.createElement('div');
+                card.className = "bg-gray-900 border border-gray-800 p-5 rounded-2xl relative space-y-2";
+                card.innerHTML = `
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h4 class="font-serif text-lg text-white">${escapeHtml(item.name)}</h4>
+                            <span class="text-xs text-champagne-400">${escapeHtml(item.relation || 'Guest')}</span>
+                        </div>
+                        <button onclick="deleteGuestbookNote('${item.id}')" class="text-xs text-red-400 hover:text-red-300">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </div>
+                    <p class="text-xs text-gray-300 italic">"${escapeHtml(item.message)}"</p>
+                    <span class="text-[10px] text-gray-500 block text-right">${item.date}</span>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function deleteGuestbookNote(id) {
+            let notes = getStoredGuestbook();
+            notes = notes.filter(n => n.id !== id);
+            saveStoredGuestbook(notes);
+            loadHostDashboardData();
+            renderGuestbook();
+        }
+
+        function switchHostTab(tab) {
+            const rsvpBtn = document.getElementById('tab-rsvp-btn');
+            const gbBtn = document.getElementById('tab-guestbook-btn');
+            const rsvpContent = document.getElementById('tab-rsvp-content');
+            const gbContent = document.getElementById('tab-guestbook-content');
+
+            if (tab === 'rsvp') {
+                rsvpBtn.classList.add('text-champagne-400', 'border-b-2', 'border-champagne-400');
+                rsvpBtn.classList.remove('text-gray-400');
+                gbBtn.classList.remove('text-champagne-400', 'border-b-2', 'border-champagne-400');
+                gbBtn.classList.add('text-gray-400');
+
+                rsvpContent.classList.remove('hidden');
+                gbContent.classList.add('hidden');
+            } else {
+                gbBtn.classList.add('text-champagne-400', 'border-b-2', 'border-champagne-400');
+                gbBtn.classList.remove('text-gray-400');
+                rsvpBtn.classList.remove('text-champagne-400', 'border-b-2', 'border-champagne-400');
+                rsvpBtn.classList.add('text-gray-400');
+
+                gbContent.classList.remove('hidden');
+                rsvpContent.classList.add('hidden');
+            }
+        }
+
+        function exportRSVPCSV() {
+            const rsvps = getStoredRSVPs();
+            if (rsvps.length === 0) {
+                alert('No RSVP data available to export.');
+                return;
+            }
+
+            let csvContent = "data:text/csv;charset=utf-8,ID,Name,Email,Attendance,Guests,Meal,Dietary,Song,Note,Date\n";
+            rsvps.forEach(r => {
+                const row = [
+                    r.id,
+                    `"${(r.name || '').replace(/"/g, '""')}"`,
+                    `"${(r.email || '').replace(/"/g, '""')}"`,
+                    r.attendance,
+                    r.guests,
+                    r.meal,
+                    `"${(r.dietary || '').replace(/"/g, '""')}"`,
+                    `"${(r.song || '').replace(/"/g, '""')}"`,
+                    `"${(r.note || '').replace(/"/g, '""')}"`,
+                    r.date
+                ].join(",");
+                csvContent += row + "\n";
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "Richard_Kim_Wedding_RSVPs.csv");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/&/g, "&amp;")
+                      .replace(/</g, "&lt;")
+                      .replace(/>/g, "&gt;")
+                      .replace(/"/g, "&quot;")
+                      .replace(/'/g, "&#039;");
+        }
+
+        // Fade in section scroll animations
+        const observerOptions = { threshold: 0.1 };
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('is-visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-in-section').forEach(section => {
+            observer.observe(section);
+        });
+
+        // Initialize Guestbook on load
+        window.onload = function() {
+            renderGuestbook();
+        };
+
+        // SECURE HOSTED VERSION: server-backed data; no client-side passcode comparison.
+        let secureRsvps=[], secureGuestbook=[], publicGuestbook=[], paymentCache={...FUND_DEFAULTS};
+        async function api(path,options={}) {
+          const res=await fetch('/api/'+path,{credentials:'same-origin',cache:'no-store',...options,headers:{...(options.body?{'Content-Type':'application/json'}:{}),...(options.headers||{})}});
+          let data;try{data=await res.json()}catch{throw Error('Server unavailable. Deploy the complete Cloudflare Pages project.')}
+          if(!res.ok)throw Error(data.error||'Request failed');
+          return data;
+        }
+        function getStoredRSVPs(){return secureRsvps}
+        function saveStoredRSVPs(){throw Error('Use secure API')}
+        function getStoredGuestbook(){return publicGuestbook}
+        function saveStoredGuestbook(){throw Error('Use secure API')}
+        function fundSettings(){return paymentCache}
+        async function refreshPayments(){
+          try{paymentCache=await api('payments');if(document.getElementById('fund-modal')&&!document.getElementById('fund-modal').classList.contains('hidden'))showFundMethod(fundMethod)}
+          catch(e){console.error(e)}
+        }
+        async function saveFundSettings(){
+          const d=collectFundSettings();if(!d)return false;
+          try{await api('payments',{method:'PUT',body:JSON.stringify(d)});paymentCache=d;document.getElementById('fund-settings-status').textContent='Saved online. Guest payment details updated.';return true}
+          catch(e){document.getElementById('fund-settings-status').textContent=e.message;return false}
+        }
+        function downloadFundWebsite(){alert('Payment settings are saved securely on the server. No HTML download needed.')}
+        async function handleRsvpSubmit(e){
+          e.preventDefault();const button=e.target.querySelector('[type="submit"]');button.disabled=true;
+          const data={name:document.getElementById('rsvp-name').value.trim(),email:document.getElementById('rsvp-email').value.trim(),attendance:document.querySelector('input[name="attendance"]:checked').value,guests:Number(document.getElementById('rsvp-guests').value),note:document.getElementById('rsvp-note').value.trim()};
+          try{await api('rsvp',{method:'POST',body:JSON.stringify(data)});document.getElementById('rsvp-form').classList.add('hidden');document.getElementById('rsvp-success').classList.remove('hidden')}
+          catch(e){alert('RSVP not saved: '+e.message)}finally{button.disabled=false}
+        }
+        async function handleGuestbookSubmit(e){
+          e.preventDefault();const button=e.target.querySelector('[type="submit"]');button.disabled=true;
+          const data={name:document.getElementById('gb-name').value.trim(),relation:document.getElementById('gb-relation').value.trim(),message:document.getElementById('gb-message').value.trim()};
+          try{await api('guestbook',{method:'POST',body:JSON.stringify(data)});e.target.reset();alert('Thank you! Your note is awaiting host approval.')}
+          catch(err){alert('Note not submitted: '+err.message)}finally{button.disabled=false}
+        }
+        async function verifyHostPasscode(e){
+          e.preventDefault();const code=document.getElementById('host-passcode-input').value;
+          try{await api('login',{method:'POST',body:JSON.stringify({code})});document.getElementById('host-passcode-input').value='';closeHostModal();await openHostDashboard()}
+          catch(err){document.getElementById('host-passcode-error').textContent=err.message;document.getElementById('host-passcode-error').classList.remove('hidden')}
+        }
+        async function openHostDashboard(){
+          try{await loadHostDashboardData();renderFundSettings();document.getElementById('host-portal-dashboard').classList.remove('hidden')}
+          catch(e){alert('Host login required: '+e.message)}
+        }
+        async function closeHostDashboard(){
+          document.getElementById('host-portal-dashboard').classList.add('hidden');
+          secureRsvps=[];secureGuestbook=[];
+          try{await api('logout',{method:'POST',body:'{}'})}catch(e){console.error(e)}
+        }
+        async function loadHostDashboardData(){
+          const d=await api('admin/data');secureRsvps=d.rsvps;secureGuestbook=d.guestbook;
+          const rsvps=secureRsvps, guestbook=secureGuestbook;
+          document.getElementById('stat-total-rsvps').textContent=rsvps.length;
+          document.getElementById('stat-total-attending').textContent=rsvps.reduce((n,r)=>n+(r.attendance==='accept'?Number(r.guests):0),0);
+          document.getElementById('stat-total-declined').textContent=rsvps.filter(r=>r.attendance==='decline').length;
+          document.getElementById('rsvp-count-badge').textContent=rsvps.length;
+          document.getElementById('guestbook-count-badge').textContent=guestbook.length;
+          renderHostRSVPTable(rsvps);renderHostGuestbookGrid(guestbook);
+          const grid=document.getElementById('host-guestbook-grid');
+          [...grid.children].forEach((card,i)=>{
+            const note=guestbook[i];if(!note)return;
+            if(!note.approved){const btn=document.createElement('button');btn.textContent='Approve & publish';btn.className='text-champagne-300 underline text-xs';btn.onclick=()=>approveGuestbook(note.id);card.appendChild(btn)}
+            else {const tag=document.createElement('span');tag.className='text-green-300 text-xs';tag.textContent='Published';card.appendChild(tag)}
+          });
+        }
+        async function approveGuestbook(id){try{await api('admin/approve',{method:'POST',body:JSON.stringify({id})});await loadHostDashboardData();await refreshGuestbook()}catch(e){alert(e.message)}}
+        async function deleteRSVP(id){if(!confirm('Delete this RSVP permanently?'))return;try{await api('admin/delete',{method:'POST',body:JSON.stringify({table:'rsvps',id})});await loadHostDashboardData()}catch(e){alert(e.message)}}
+        async function deleteGuestbookNote(id){if(!confirm('Delete this guestbook note permanently?'))return;try{await api('admin/delete',{method:'POST',body:JSON.stringify({table:'guestbook',id})});await loadHostDashboardData();await refreshGuestbook()}catch(e){alert(e.message)}}
+        async function refreshGuestbook(){try{publicGuestbook=await api('guestbook');renderGuestbook()}catch(e){console.error(e)}}
+        window.onload=async()=>{await Promise.all([refreshPayments(),refreshGuestbook()])};
+
+    </script>
+</body>
+</html>
