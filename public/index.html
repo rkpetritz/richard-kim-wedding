@@ -457,7 +457,7 @@
             <div class="text-center mb-12">
                 <span class="text-champagne-300 uppercase text-xs tracking-widest font-semibold">Kindly Respond By November 1, 2026</span>
                 <h2 class="font-serif text-4xl md:text-5xl text-white mt-2 font-normal">RSVP</h2>
-                <p class="text-gray-300 font-light text-sm mt-2">Please fill out the form below to confirm your attendance.</p>
+                <p class="text-gray-300 font-light text-sm mt-2">RSVP is reserved for personally invited guests. Please enter your invitation passcode to respond.</p>
                 <div class="w-12 h-0.5 bg-champagne-400 mx-auto mt-4"></div>
             </div>
 
@@ -476,8 +476,24 @@
                     </button>
                 </div>
 
+                <!-- Invitation-only RSVP gate. Guestbook remains open to all visitors. -->
+                <div id="rsvp-gate" class="text-center space-y-5">
+                    <h3 class="font-serif text-2xl text-white">By Invitation Only</h3>
+                    <p class="text-gray-300 text-sm leading-relaxed max-w-lg mx-auto">Our ceremony is an intimate celebration, so RSVP responses are reserved for guests personally invited by Richard &amp; Kim. If you received an invitation, enter the passcode we shared with you.</p>
+                    <form id="rsvp-unlock-form" onsubmit="unlockGuestRsvp(event)" class="max-w-sm mx-auto space-y-3">
+                        <label for="rsvp-passcode" class="block text-xs uppercase tracking-widest text-champagne-300">Invitation Passcode</label>
+                        <input id="rsvp-passcode" type="password" autocomplete="off" required maxlength="128" placeholder="Enter your guest passcode" class="w-full bg-white/10 border border-white/20 rounded-xl px-4 py-3 text-center text-white placeholder-gray-400 focus:outline-none focus:border-champagne-400">
+                        <p id="rsvp-passcode-error" role="alert" class="hidden text-red-200 text-sm"></p>
+                        <button type="submit" class="w-full bg-champagne-500 hover:bg-champagne-600 text-gray-900 font-semibold py-3 rounded-xl uppercase text-xs tracking-widest">Unlock RSVP</button>
+                    </form>
+                    <div class="pt-5 border-t border-white/15">
+                        <p class="text-gray-300 text-sm leading-relaxed">Not on the guest list? We'd still love to hear from you! Please share your heartfelt messages, prayers, and wedding wishes in our Guestbook &amp; Wishes section. 🤍</p>
+                        <a href="#guestbook" class="inline-block mt-4 text-champagne-300 underline underline-offset-4 font-semibold text-sm">Visit Guestbook &amp; Wishes</a>
+                    </div>
+                </div>
+
                 <!-- Form -->
-                <form id="rsvp-form" onsubmit="handleRsvpSubmit(event)" class="space-y-6">
+                <form id="rsvp-form" onsubmit="handleRsvpSubmit(event)" class="hidden space-y-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label class="block text-xs uppercase tracking-widest text-gray-300 mb-2 font-medium">Full Name *</label>
@@ -1371,9 +1387,26 @@
           catch(e){document.getElementById('fund-settings-status').textContent=e.message;return false}
         }
         function downloadFundWebsite(){alert('Payment settings are saved securely on the server. No HTML download needed.')}
+        // Keep guest access separate from Host Portal authentication.
+        let guestRsvpPasscode='';
+        async function unlockGuestRsvp(e){
+          e.preventDefault();
+          const button=e.target.querySelector('[type="submit"]');
+          const code=document.getElementById('rsvp-passcode').value.trim();
+          const error=document.getElementById('rsvp-passcode-error');
+          error.classList.add('hidden');button.disabled=true;
+          try{
+            await api('rsvp/verify',{method:'POST',body:JSON.stringify({passcode:code})});
+            guestRsvpPasscode=code;
+            document.getElementById('rsvp-passcode').value='';
+            document.getElementById('rsvp-gate').classList.add('hidden');
+            document.getElementById('rsvp-form').classList.remove('hidden');
+          }catch(err){error.textContent=err.message;error.classList.remove('hidden')}
+          finally{button.disabled=false}
+        }
         async function handleRsvpSubmit(e){
           e.preventDefault();const button=e.target.querySelector('[type="submit"]');button.disabled=true;
-          const data={name:document.getElementById('rsvp-name').value.trim(),email:document.getElementById('rsvp-email').value.trim(),attendance:document.querySelector('input[name="attendance"]:checked').value,guests:Number(document.getElementById('rsvp-guests').value),note:document.getElementById('rsvp-note').value.trim()};
+          const data={passcode:guestRsvpPasscode,name:document.getElementById('rsvp-name').value.trim(),email:document.getElementById('rsvp-email').value.trim(),attendance:document.querySelector('input[name="attendance"]:checked').value,guests:Number(document.getElementById('rsvp-guests').value),note:document.getElementById('rsvp-note').value.trim()};
           try{await api('rsvp',{method:'POST',body:JSON.stringify(data)});document.getElementById('rsvp-form').classList.add('hidden');document.getElementById('rsvp-success').classList.remove('hidden')}
           catch(e){alert('RSVP not saved: '+e.message)}finally{button.disabled=false}
         }
