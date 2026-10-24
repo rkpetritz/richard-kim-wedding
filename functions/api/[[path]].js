@@ -60,6 +60,24 @@ export async function onRequest({request,env,params}){
    if(clean.richardPaypal&&!(/^https:\/\//i.test(clean.richardPaypal)||/^\S+@\S+\.\S+$/.test(clean.richardPaypal)))return json({error:'Invalid PayPal email/link'},400);
    await env.DB.prepare("INSERT INTO settings(key,value) VALUES('payments',?) ON CONFLICT(key) DO UPDATE SET value=excluded.value").bind(JSON.stringify(clean)).run();return json({ok:true});
   }
+  // Host-only editing. IDs and original timestamps are preserved.
+  if(path==='/admin/update'&&method==='POST'){
+   const d=await body(request);
+   if(!['rsvps','guestbook'].includes(d.table)||typeof d.id!=='string'||!d.id||d.id.length>100)return json({error:'Invalid record'},400);
+   const existing=await env.DB.prepare(`SELECT id FROM ${d.table} WHERE id=?`).bind(d.id).first();
+   if(!existing)return json({error:'Record not found'},404);
+   if(d.table==='rsvps'){
+    const name=limit(d.name,120),email=limit(d.email,180),attendance=d.attendance,guests=Number(d.guests),note=limit(d.note,1000);
+    if(!name||!/^\S+@\S+\.\S+$/.test(email)||!['accept','decline'].includes(attendance)||!Number.isInteger(guests)||guests<1||guests>5)return json({error:'Check name, email, attendance and party size (1–5).'},400);
+    await env.DB.prepare('UPDATE rsvps SET name=?,email=?,attendance=?,guests=?,note=? WHERE id=?').bind(name,email,attendance,guests,note,d.id).run();
+   }else{
+    const name=limit(d.name,120),relation=limit(d.relation,120),message=limit(d.message,1000);
+    if(!name||!message)return json({error:'Name and message are required'},400);
+    const approved=(d.approved===true||d.approved===1)?1:0;
+    await env.DB.prepare('UPDATE guestbook SET name=?,relation=?,message=?,approved=? WHERE id=?').bind(name,relation,message,approved,d.id).run();
+   }
+   return json({ok:true});
+  }
   if(path==='/admin/delete'&&method==='POST'){const d=await body(request);if(!['rsvps','guestbook'].includes(d.table)||typeof d.id!=='string')return json({error:'Invalid request'},400);await env.DB.prepare(`DELETE FROM ${d.table} WHERE id=?`).bind(d.id).run();return json({ok:true})}
   if(path==='/admin/approve'&&method==='POST'){const d=await body(request);if(typeof d.id!=='string')return json({error:'Invalid ID'},400);await env.DB.prepare('UPDATE guestbook SET approved=1 WHERE id=?').bind(d.id).run();return json({ok:true})}
   return json({error:'Not found'},404)
