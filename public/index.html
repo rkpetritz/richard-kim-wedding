@@ -839,6 +839,28 @@
         </div>
     </div>
 
+    <!-- Host Portal: full RSVP response viewer (read-only) -->
+    <div id="rsvp-details-modal" role="dialog" aria-modal="true" aria-labelledby="rsvp-details-title" class="hidden fixed inset-0 z-[100] bg-black/80 items-center justify-center p-4" onclick="if(event.target===this)closeRSVPDetails()">
+        <div class="bg-gray-950 border border-gray-700 rounded-2xl shadow-2xl w-full max-w-xl max-h-[85vh] overflow-y-auto p-6 sm:p-8 text-white">
+            <div class="flex items-start justify-between gap-4 mb-5">
+                <h2 id="rsvp-details-title" class="font-serif text-2xl text-champagne-300">Full RSVP Response</h2>
+                <button id="rsvp-details-close" type="button" onclick="closeRSVPDetails()" class="text-gray-300 hover:text-white text-xl" aria-label="Close full response">&times;</button>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+                <div><div class="text-gray-400 text-xs">Guest name</div><div id="rsvp-detail-name" class="break-words"></div></div>
+                <div><div class="text-gray-400 text-xs">Email</div><div id="rsvp-detail-email" class="break-all"></div></div>
+                <div><div class="text-gray-400 text-xs">Attendance</div><div id="rsvp-detail-status"></div></div>
+                <div><div class="text-gray-400 text-xs">Party size</div><div id="rsvp-detail-guests"></div></div>
+                <div class="sm:col-span-2"><div class="text-gray-400 text-xs">Submitted</div><div id="rsvp-detail-date"></div></div>
+            </div>
+            <div class="mt-6"><div class="text-champagne-300 text-sm font-semibold mb-2">Full message</div><div id="rsvp-detail-message" class="bg-gray-900 border border-gray-700 rounded-xl p-4 whitespace-pre-wrap break-words text-sm leading-relaxed max-h-[40vh] overflow-y-auto"></div></div>
+            <div class="mt-5 flex flex-wrap gap-3 justify-end">
+                <button type="button" onclick="copyRSVPMessage()" class="bg-gray-800 hover:bg-gray-700 border border-gray-600 px-4 py-2 rounded-lg text-sm">Copy Message</button>
+                <button type="button" onclick="closeRSVPDetails()" class="bg-emerald-800 hover:bg-emerald-700 px-4 py-2 rounded-lg text-sm">Close</button>
+            </div>
+        </div>
+    </div>
+
     <!-- JavaScript Logic -->
     <script>
 
@@ -1191,6 +1213,7 @@
             list.forEach(r => {
                 const tr = document.createElement('tr');
                 tr.className = "hover:bg-gray-800/50 transition-colors";
+                tr.dataset.rsvpId = String(r.id);
                 const isAccept = r.attendance === 'accept';
                 
                 tr.innerHTML = `
@@ -1209,7 +1232,8 @@
                     </td>
                     <td class="p-4 text-xs text-gray-300 max-w-xs">
                         
-                        ${r.note ? `<div class="italic text-gray-400 text-[11px] truncate">"${escapeHtml(r.note)}"</div>` : ''}
+                        ${r.note ? `<div class="italic text-gray-400 text-[11px] truncate">"${escapeHtml(r.note)}"</div>` : '<span class="text-gray-500">No message</span>'}
+                        <button type="button" onclick="viewRSVPDetails(this.closest('tr').dataset.rsvpId)" class="mt-2 text-xs text-champagne-300 underline hover:text-white">View full response</button>
                     </td>
                     <td class="p-4 text-xs text-gray-400">${r.date}</td>
                     <td class="p-4 text-right">
@@ -1221,6 +1245,35 @@
                 tbody.appendChild(tr);
             });
         }
+
+        function viewRSVPDetails(id) {
+            const r = getStoredRSVPs().find(item => String(item.id) === String(id));
+            if (!r) { alert('This RSVP is no longer available.'); return; }
+            const set = (field, value) => { document.getElementById(field).textContent = value == null || value === '' ? '—' : String(value); };
+            set('rsvp-detail-name', r.name);
+            set('rsvp-detail-email', r.email);
+            set('rsvp-detail-status', r.attendance === 'accept' ? 'Joyfully Accepts' : 'Regretfully Declines');
+            set('rsvp-detail-guests', r.guests);
+            set('rsvp-detail-date', r.date);
+            set('rsvp-detail-message', r.note || 'No message provided.');
+            const modal = document.getElementById('rsvp-details-modal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+            document.getElementById('rsvp-details-close').focus();
+        }
+        function closeRSVPDetails() {
+            const modal = document.getElementById('rsvp-details-modal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+        async function copyRSVPMessage() {
+            const message = document.getElementById('rsvp-detail-message').textContent;
+            try { await navigator.clipboard.writeText(message); alert('Message copied.'); }
+            catch (e) { alert('Copy was blocked by your browser. You can select and copy the message manually.'); }
+        }
+        document.addEventListener('keydown', event => {
+            if (event.key === 'Escape') closeRSVPDetails();
+        });
 
         function filterRSVPTable() {
             const query = document.getElementById('rsvp-search-input').value.toLowerCase();
