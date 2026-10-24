@@ -49,7 +49,7 @@ export async function onRequest({request,env,params}){
    return json({ok:true},201);
   }
   if(path==='/guestbook'&&method==='POST'){
-   const d=await body(request);if(d.website)return json({ok:true});const name=limit(d.name,120),relation=limit(d.relation,120),message=limit(d.message,1000);if(!name||!message)return json({error:'Name and message are required'},400);
+   const d=await body(request);if(d.website)return json({ok:true});const name=limit(d.name,120),relation=limit(d.relation,120);if(typeof d.message!=='string'||d.message.trim().length>5000)return json({error:'Guestbook message must be 5,000 characters or fewer'},400);const message=d.message.trim();if(!name||!message)return json({error:'Name and message are required'},400);
    await env.DB.prepare('INSERT INTO guestbook(id,name,relation,message,date,approved) VALUES(?,?,?,?,?,0)').bind(crypto.randomUUID(),name,relation,message,new Date().toISOString()).run();return json({ok:true,notice:'Submitted for host approval'},201)
   }
   if(!await authorized(request,env))return json({error:'Host login required'},401);
@@ -71,8 +71,9 @@ export async function onRequest({request,env,params}){
     if(!name||!/^\S+@\S+\.\S+$/.test(email)||!['accept','decline'].includes(attendance)||!Number.isInteger(guests)||guests<1||guests>5)return json({error:'Check name, email, attendance and party size (1–5).'},400);
     await env.DB.prepare('UPDATE rsvps SET name=?,email=?,attendance=?,guests=?,note=? WHERE id=?').bind(name,email,attendance,guests,note,d.id).run();
    }else{
-    const name=limit(d.name,120),relation=limit(d.relation,120),message=limit(d.message,1000);
-    if(!name||!message)return json({error:'Name and message are required'},400);
+    const name=limit(d.name,120),relation=limit(d.relation,120);
+    if(typeof d.message!=='string'||d.message.trim().length>5000)return json({error:'Guestbook message must be 5,000 characters or fewer'},400);
+    const message=d.message.trim();if(!name||!message)return json({error:'Name and message are required'},400);
     const approved=(d.approved===true||d.approved===1)?1:0;
     await env.DB.prepare('UPDATE guestbook SET name=?,relation=?,message=?,approved=? WHERE id=?').bind(name,relation,message,approved,d.id).run();
    }
