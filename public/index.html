@@ -594,7 +594,7 @@
       <div class="bg-ivory rounded-3xl max-w-xl mx-auto my-8 p-7 md:p-10 relative shadow-2xl border border-champagne-300">
         <button type="button" onclick="closeFundModal()" aria-label="Close" class="absolute right-5 top-4 text-2xl text-sage-800">&times;</button>
         <div class="text-center mb-6"><span class="text-champagne-600 text-xs uppercase tracking-widest">Richard &amp; Kim</span><h2 id="fund-title" class="font-serif text-4xl text-sage-800">Our Honeymoon Fund</h2><p class="text-sm text-gray-600 mt-2">Your presence is the greatest gift. If you'd like to contribute to our honeymoon in Spain, choose a transfer method below.</p></div>
-       <!-- <div class="mb-6 bg-white rounded-2xl border border-champagne-200 p-5">
+        <div class="mb-6 bg-white rounded-2xl border border-champagne-200 p-5">
           <p class="text-xs uppercase tracking-widest text-sage-700 font-semibold mb-3">Choose a contribution amount</p>
           <div class="grid grid-cols-4 gap-2" id="fund-amount-buttons">
             <button type="button" onclick="selectFundAmount(25)" class="fund-amount-btn rounded-xl border border-sage-200 py-3 text-sm">$25</button>
@@ -607,7 +607,7 @@
           <p id="fund-amount-summary" class="mt-3 text-sm font-semibold text-sage-800" aria-live="polite">Suggested contribution: CAD $50.00</p>
           <p class="text-xs text-gray-500 mt-1">The amount is a reference for your transfer. Enter it in your banking app or payment provider to complete the gift.</p>
           <button type="button" onclick="copyFundAmount()" class="mt-3 text-xs text-champagne-600 underline">Copy selected amount</button>
-        </div> -->
+        </div>
         <p class="text-xs uppercase tracking-widest text-sage-700 font-semibold mb-2">Where are you sending from?</p>
         <div class="flex gap-2 mb-4">
           <button type="button" onclick="showFundRegion('canada')" id="fund-canada-tab" class="flex-1 rounded-xl p-3 bg-sage-800 text-white text-sm">🇨🇦 Canada (CAD)</button>
@@ -1237,6 +1237,7 @@
                     </td>
                     <td class="p-4 text-xs text-gray-400">${r.date}</td>
                     <td class="p-4 text-right">
+                        <button type="button" onclick="openHostEdit('rsvps',this.closest('tr').dataset.rsvpId)" class="text-xs text-champagne-300 hover:text-white p-1 mr-2" aria-label="Edit RSVP">Edit</button>
                         <button onclick="deleteRSVP('${r.id}')" class="text-xs text-red-400 hover:text-red-300 p-1">
                             <i class="fa-solid fa-trash"></i>
                         </button>
@@ -1306,12 +1307,14 @@
             list.forEach(item => {
                 const card = document.createElement('div');
                 card.className = "bg-gray-900 border border-gray-800 p-5 rounded-2xl relative space-y-2";
+                card.dataset.guestbookId = String(item.id);
                 card.innerHTML = `
                     <div class="flex justify-between items-start">
                         <div>
                             <h4 class="font-serif text-lg text-white">${escapeHtml(item.name)}</h4>
                             <span class="text-xs text-champagne-400">${escapeHtml(item.relation || 'Guest')}</span>
                         </div>
+                        <button type="button" onclick="openHostEdit('guestbook',this.closest('[data-guestbook-id]').dataset.guestbookId)" class="text-xs text-champagne-300 hover:text-white mr-3">Edit</button>
                         <button onclick="deleteGuestbookNote('${item.id}')" class="text-xs text-red-400 hover:text-red-300">
                             <i class="fa-solid fa-trash"></i>
                         </button>
@@ -1499,6 +1502,46 @@
             else {const tag=document.createElement('span');tag.className='text-green-300 text-xs';tag.textContent='Published';card.appendChild(tag)}
           });
         }
+        let hostEditTarget=null;
+        function openHostEdit(table,id){
+          if(!['rsvps','guestbook'].includes(table))return;
+          const item=(table==='rsvps'?secureRsvps:secureGuestbook).find(x=>String(x.id)===String(id));
+          if(!item){alert('Record not found. Refresh the Host Portal.');return}
+          hostEditTarget={table,id:String(id)};
+          document.getElementById('host-edit-title').textContent=table==='rsvps'?'Edit RSVP response':'Edit guestbook wish';
+          document.getElementById('host-edit-name').value=item.name||'';
+          document.getElementById('host-edit-message').value=table==='rsvps'?(item.note||''):(item.message||'');
+          document.getElementById('host-edit-message-label').textContent=table==='rsvps'?'RSVP message':'Guestbook message';
+          document.getElementById('host-edit-rsvp-fields').classList.toggle('hidden',table!=='rsvps');
+          document.getElementById('host-edit-guestbook-fields').classList.toggle('hidden',table!=='guestbook');
+          if(table==='rsvps'){
+            document.getElementById('host-edit-email').value=item.email||'';
+            document.getElementById('host-edit-attendance').value=item.attendance;
+            document.getElementById('host-edit-guests').value=item.guests;
+          }else{
+            document.getElementById('host-edit-relation').value=item.relation||'';
+            document.getElementById('host-edit-approved').checked=Boolean(item.approved);
+          }
+          document.getElementById('host-edit-error').classList.add('hidden');
+          const modal=document.getElementById('host-edit-modal');modal.classList.remove('hidden');modal.classList.add('flex');
+          document.getElementById('host-edit-name').focus();
+        }
+        function closeHostEdit(){const m=document.getElementById('host-edit-modal');m.classList.add('hidden');m.classList.remove('flex');hostEditTarget=null}
+        async function saveHostEdit(event){
+          event.preventDefault();if(!hostEditTarget)return;
+          const {table,id}=hostEditTarget;
+          const d={table,id,name:document.getElementById('host-edit-name').value.trim()};
+          if(table==='rsvps')Object.assign(d,{email:document.getElementById('host-edit-email').value.trim(),attendance:document.getElementById('host-edit-attendance').value,guests:Number(document.getElementById('host-edit-guests').value),note:document.getElementById('host-edit-message').value.trim()});
+          else Object.assign(d,{relation:document.getElementById('host-edit-relation').value.trim(),message:document.getElementById('host-edit-message').value.trim(),approved:document.getElementById('host-edit-approved').checked});
+          const btn=document.getElementById('host-edit-save'),error=document.getElementById('host-edit-error');
+          btn.disabled=true;error.classList.add('hidden');
+          try{
+            await api('admin/update',{method:'POST',body:JSON.stringify(d)});
+            closeHostEdit();await loadHostDashboardData();
+            if(table==='guestbook')await refreshGuestbook();
+          }catch(e){error.textContent=e.message;error.classList.remove('hidden')}
+          finally{btn.disabled=false}
+        }
         async function approveGuestbook(id){try{await api('admin/approve',{method:'POST',body:JSON.stringify({id})});await loadHostDashboardData();await refreshGuestbook()}catch(e){alert(e.message)}}
         async function deleteRSVP(id){if(!confirm('Delete this RSVP permanently?'))return;try{await api('admin/delete',{method:'POST',body:JSON.stringify({table:'rsvps',id})});await loadHostDashboardData()}catch(e){alert(e.message)}}
         async function deleteGuestbookNote(id){if(!confirm('Delete this guestbook note permanently?'))return;try{await api('admin/delete',{method:'POST',body:JSON.stringify({table:'guestbook',id})});await loadHostDashboardData();await refreshGuestbook()}catch(e){alert(e.message)}}
@@ -1532,5 +1575,28 @@
         document.addEventListener('keydown', startMusic);
       })();
     </script>
+
+    <!-- Authenticated Host Portal editor -->
+    <div id="host-edit-modal" role="dialog" aria-modal="true" aria-labelledby="host-edit-title" class="hidden fixed inset-0 z-[110] bg-black/85 items-center justify-center p-4" onclick="if(event.target===this)closeHostEdit()">
+      <div class="bg-gray-950 border border-gray-700 rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto p-6 text-white">
+        <div class="flex items-center justify-between mb-4"><h2 id="host-edit-title" class="font-serif text-2xl text-champagne-300">Edit response</h2><button type="button" onclick="closeHostEdit()" aria-label="Close editor" class="text-2xl">&times;</button></div>
+        <form id="host-edit-form" onsubmit="saveHostEdit(event)" class="space-y-3">
+          <label class="block text-sm">Name<input id="host-edit-name" required maxlength="120" class="mt-1 w-full p-3 rounded-lg bg-gray-800 border border-gray-600 text-white"></label>
+          <div id="host-edit-rsvp-fields" class="space-y-3">
+            <label class="block text-sm">Email<input id="host-edit-email" type="email" maxlength="180" class="mt-1 w-full p-3 rounded-lg bg-gray-800 border border-gray-600 text-white"></label>
+            <label class="block text-sm">Attendance<select id="host-edit-attendance" class="mt-1 w-full p-3 rounded-lg bg-gray-800 border border-gray-600 text-white"><option value="accept">Accepts</option><option value="decline">Declines</option></select></label>
+            <label class="block text-sm">Party size (1–5)<input id="host-edit-guests" type="number" min="1" max="5" step="1" class="mt-1 w-full p-3 rounded-lg bg-gray-800 border border-gray-600 text-white"></label>
+          </div>
+          <div id="host-edit-guestbook-fields" class="hidden space-y-3">
+            <label class="block text-sm">Relationship<input id="host-edit-relation" maxlength="120" class="mt-1 w-full p-3 rounded-lg bg-gray-800 border border-gray-600 text-white"></label>
+            <label class="flex items-center gap-2 text-sm"><input id="host-edit-approved" type="checkbox"> Published / approved</label>
+          </div>
+          <label class="block text-sm"><span id="host-edit-message-label">Message</span><textarea id="host-edit-message" maxlength="1000" rows="5" class="mt-1 w-full p-3 rounded-lg bg-gray-800 border border-gray-600 text-white"></textarea></label>
+          <p id="host-edit-error" role="alert" class="hidden text-sm text-red-300"></p>
+          <div class="flex justify-end gap-3"><button type="button" onclick="closeHostEdit()" class="px-4 py-2 rounded-lg border border-gray-500">Cancel</button><button id="host-edit-save" type="submit" class="px-5 py-2 rounded-lg bg-emerald-700 hover:bg-emerald-600">Save changes</button></div>
+        </form>
+      </div>
+    </div>
+
 </body>
 </html>
