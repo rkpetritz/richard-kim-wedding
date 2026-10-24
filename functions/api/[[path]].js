@@ -24,10 +24,29 @@ export async function onRequest({request,env,params}){
   if(path==='/logout'&&method==='POST')return json({ok:true},200,{'Set-Cookie':'rk_host=; HttpOnly; Secure; SameSite=Strict; Path=/api; Max-Age=0'});
   if(path==='/payments'&&method==='GET'){const row=await env.DB.prepare("SELECT value FROM settings WHERE key='payments'").first();return json(row?JSON.parse(row.value):defaults)}
   if(path==='/guestbook'&&method==='GET'){const rows=await env.DB.prepare('SELECT id,name,relation,message,date FROM guestbook WHERE approved=1 ORDER BY date DESC LIMIT 100').all();return json(rows.results)}
-  if(path==='/rsvp'&&method==='POST'){
-   const d=await body(request);if(d.website)return json({ok:true});const name=limit(d.name,120),email=limit(d.email,180),attendance=d.attendance,guests=Number(d.guests),note=limit(d.note,1000);
+  // Guest RSVP passcode is separate from both Host Portal passcodes.
+  // Use a dedicated secret and rate-limit incorrect guest code attempts by IP.
+  if(path==='/rsvp/verify'&&method==='POST' || path==='/rsvp'&&method==='POST'){
+   if(!env.RSVP_GUEST_PASSCODE)return json({error:'Guest RSVP access is not configured yet.'},503);
+   const ip=request.headers.get('CF-Connecting-IP')||'unknown';
+   const key=await hex('guest-rsvp:'+ip+env.SESSION_SECRET);
+   const now=Date.now();
+   const prev=await env.DB.prepare('SELECT count,reset_at FROM login_attempts WHERE ip_hash=?').bind(key).first();
+   if(prev&&prev.reset_at>now&&prev.count>=8)return json({error:'Too many attempts. Please try again in 15 minutes.'},429);
+   const d=await body(request);
+   const valid=safeEqual(limit(d.passcode,128),env.RSVP_GUEST_PASSCODE);
+   if(!valid){
+    const count=prev&&prev.reset_at>now?prev.count+1:1;
+    await env.DB.prepare('INSERT INTO login_attempts (ip_hash,count,reset_at) VALUES (?,?,?) ON CONFLICT(ip_hash) DO UPDATE SET count=excluded.count,reset_at=excluded.reset_at').bind(key,count,now+900000).run();
+    return json({error:'Incorrect invitation passcode. Please check the code Richard & Kim shared with you.'},403);
+   }
+   await env.DB.prepare('DELETE FROM login_attempts WHERE ip_hash=?').bind(key).run();
+   if(path==='/rsvp/verify')return json({ok:true});
+   if(d.website)return json({ok:true});
+   const name=limit(d.name,120),email=limit(d.email,180),attendance=d.attendance,guests=Number(d.guests),note=limit(d.note,1000);
    if(!name||!/^\S+@\S+\.\S+$/.test(email)||!['accept','decline'].includes(attendance)||!Number.isInteger(guests)||guests<1||guests>5)return json({error:'Please check your RSVP fields'},400);
-   await env.DB.prepare('INSERT INTO rsvps(id,name,email,attendance,guests,note,date) VALUES(?,?,?,?,?,?,?)').bind(crypto.randomUUID(),name,email,attendance,guests,note,new Date().toISOString()).run();return json({ok:true},201)
+   await env.DB.prepare('INSERT INTO rsvps(id,name,email,attendance,guests,note,date) VALUES(?,?,?,?,?,?,?)').bind(crypto.randomUUID(),name,email,attendance,guests,note,new Date().toISOString()).run();
+   return json({ok:true},201);
   }
   if(path==='/guestbook'&&method==='POST'){
    const d=await body(request);if(d.website)return json({ok:true});const name=limit(d.name,120),relation=limit(d.relation,120),message=limit(d.message,1000);if(!name||!message)return json({error:'Name and message are required'},400);
